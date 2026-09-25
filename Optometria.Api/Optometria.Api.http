@@ -1,0 +1,6 @@
+@Optometria.Api_HostAddress = http://localhost:5145
+
+GET {{Optometria.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
