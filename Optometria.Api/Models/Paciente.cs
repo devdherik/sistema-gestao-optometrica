@@ -14,6 +14,5 @@ public class Paciente
     //ligação de pacientes com atendimentos
     public List<Atendimento> Atendimentos {get; set; } = new List<Atendimento>();
     
-
-
+    
 }

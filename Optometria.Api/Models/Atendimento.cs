@@ -12,5 +12,10 @@ public class Atendimento
     public int PacienteId {get; set; }
     public Paciente? Paciente {get; set; }
 
+    
+    //ligar atendimento a otica
+    public int? OpticaOrigemId {get; set; }
+    public Optica? OpticaOrigem {get; set;}
+
 
 }
