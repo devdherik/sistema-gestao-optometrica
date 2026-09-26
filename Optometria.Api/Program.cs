@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Optometria.Api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+var conexao = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<OptometriaDbContext>(options =>
+    options.UseSqlite(conexao));
 
 var app = builder.Build();
 
