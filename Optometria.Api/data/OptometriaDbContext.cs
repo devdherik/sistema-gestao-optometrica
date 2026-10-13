@@ -23,6 +23,13 @@ public class OptometriaDbContext : DbContext
             .WithMany(paciente => paciente.Atendimentos)
             .HasForeignKey(atendimento => atendimento.PacienteId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Atendimento>()
+            .OwnsOne(atendimento => atendimento.OlhoDireito);
+
+        modelBuilder.Entity<Atendimento>()
+            .OwnsOne(atendimento => atendimento.OlhoEsquerdo);
+
     }
 
 

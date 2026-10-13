@@ -10,5 +10,5 @@ public class RefratometriaOlho
     public string? AvPerto {get; set; }
     public decimal? Adicao {get; set; }
     public decimal? Dnp {get; set; }
-
+    
 }

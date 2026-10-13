@@ -26,6 +26,12 @@ namespace Optometria.Api.Migrations
                     b.Property<DateTime?>("DataAtendimento")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateOnly?>("DataSugeridaRetorno")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("DistanciaPupilar")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ObservacoesAtendimento")
                         .HasColumnType("TEXT");
 
@@ -37,6 +43,9 @@ namespace Optometria.Api.Migrations
 
                     b.Property<string>("QueixaPrincipal")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("SemNecessidadeNovaCorrecao")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -101,6 +110,78 @@ namespace Optometria.Api.Migrations
                         .HasForeignKey("PacienteId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.OwnsOne("Optometria.Api.Models.RefratometriaOlho", "OlhoDireito", b1 =>
+                        {
+                            b1.Property<int>("AtendimentoId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<decimal?>("Adicao")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("AvLonge")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("AvPerto")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<decimal?>("Cilindrico")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<decimal?>("Dnp")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<decimal?>("Eixo")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<decimal?>("Esferico")
+                                .HasColumnType("TEXT");
+
+                            b1.HasKey("AtendimentoId");
+
+                            b1.ToTable("Atendimentos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AtendimentoId");
+                        });
+
+                    b.OwnsOne("Optometria.Api.Models.RefratometriaOlho", "OlhoEsquerdo", b1 =>
+                        {
+                            b1.Property<int>("AtendimentoId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<decimal?>("Adicao")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("AvLonge")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("AvPerto")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<decimal?>("Cilindrico")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<decimal?>("Dnp")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<decimal?>("Eixo")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<decimal?>("Esferico")
+                                .HasColumnType("TEXT");
+
+                            b1.HasKey("AtendimentoId");
+
+                            b1.ToTable("Atendimentos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AtendimentoId");
+                        });
+
+                    b.Navigation("OlhoDireito");
+
+                    b.Navigation("OlhoEsquerdo");
 
                     b.Navigation("OpticaOrigem");
 

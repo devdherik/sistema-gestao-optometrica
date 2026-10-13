@@ -18,4 +18,16 @@ public class Atendimento
     public Optica? OpticaOrigem {get; set;}
 
 
+
+    //ligar atendimento à refratimetriaolho
+    public RefratometriaOlho? OlhoDireito {get; set; }
+    public RefratometriaOlho? OlhoEsquerdo {get; set; }
+    public decimal? DistanciaPupilar {get; set; }
+    public DateOnly? DataSugeridaRetorno {get; set; }
+    public bool SemNecessidadeNovaCorrecao {get; set; }
+    
+
+
+
+
 }
