@@ -32,6 +32,10 @@ namespace Optometria.Api.Migrations
                     b.Property<decimal?>("DistanciaPupilar")
                         .HasColumnType("TEXT");
 
+                    b.PrimitiveCollection<string>("Lentes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ObservacoesAtendimento")
                         .HasColumnType("TEXT");
 
@@ -46,6 +50,10 @@ namespace Optometria.Api.Migrations
 
                     b.Property<bool>("SemNecessidadeNovaCorrecao")
                         .HasColumnType("INTEGER");
+
+                    b.PrimitiveCollection<string>("Tratamentos")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

@@ -27,6 +27,11 @@ public class Atendimento
     public bool SemNecessidadeNovaCorrecao {get; set; }
     
 
+    public List<string> Lentes {get; set; } = new List<string>();
+    public List<string> Tratamentos {get; set; } = new List<string>();
+    
+
+
 
 
 
