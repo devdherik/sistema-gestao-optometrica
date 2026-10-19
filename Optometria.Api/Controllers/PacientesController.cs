@@ -6,6 +6,7 @@ using SQLitePCL;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Optometria.Api.Controllers;
 
@@ -23,10 +24,9 @@ public class PacientesController : ControllerBase
 
 
 
-
-
-
-
+    /////////////////////////////////////////////////
+    ///////////// VAMOS DE MÉTODOS //////////////////
+    /////////////////////////////////////////////////
 
     // MÉTODO PARA CRIAR O DTO DO PACIENTE
     [HttpPost]
@@ -60,9 +60,6 @@ public class PacientesController : ControllerBase
         return CreatedAtAction(nameof(BuscarPorId), new { id = paciente.Id }, resposta);
     }
 
-
-
-
     // MÉTODO PARA BUSCAR O PACIENTE PELO ID
     [HttpGet("{id}")]
     public async Task<ActionResult<PacienteDto>> BuscarPorId(int id)
@@ -90,7 +87,6 @@ public class PacientesController : ControllerBase
         // retorna 200 OK com os dados do paciente
         return Ok(dto);
     }
-
 
     // MÉTODO PARA LISTAR OS PACIENTES
     [HttpGet]
@@ -120,6 +116,64 @@ public class PacientesController : ControllerBase
 
         // aqui eu retorno o 200 OK com a lista de pacientes encontrados
         return Ok(pacientes);
-    } 
+    }
+
+    // MÉTODO PARA ATUALIZAR DADOS DO PACIENTE
+    [HttpPut("{id}")]
+    public async Task<ActionResult<PacienteDto>> Atualizar(int id, CriarPacienteDto dto)
+    {
+        //inicialmente procura o paciente pelo id
+        var paciente = await _contexto.Pacientes.FindAsync(id);
+
+        //caso não encontre: erro
+        if (paciente == null)
+        {
+            return NotFound(new {mensagem = "Paciente não encontrado"});
+        }
+
+        //atualiza os dados dele com o que veio da tela
+        paciente.NomeCompleto = dto.NomeCompleto;
+        paciente.DataNascimento = dto.DataNascimento;
+        paciente.Telefone = dto.Telefone;
+        paciente.Observacoes = dto.Observacoes;
+
+        //salvo as mudanças
+        await _contexto.SaveChangesAsync();
+
+        //monta o DTO com os dados atualizados
+        var resposta = new PacienteDto
+        {
+            Id = paciente.Id,
+            NomeCompleto = paciente.NomeCompleto,
+            DataNascimento = paciente.DataNascimento,
+            Telefone = paciente.Telefone,
+            Observacoes = paciente.Observacoes
+        };
+
+        return Ok(resposta);
+    }
+
+    // MÉTODO PARA EXCLUIR O PACIENTE
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Exlcuir(int id)
+    {
+        //novamente procura pelo id
+        var paciente = await _contexto.Pacientes.FindAsync(id);
+
+        //não encontrou? erro bb
+        if (paciente == null)
+        {
+            return NotFound(new {mensagem = "Paciente não encontrado"});
+        }
+
+        //remove do banco
+        _contexto.Pacientes.Remove(paciente);
+        await _contexto.SaveChangesAsync();
+
+        return NoContent();
+
+        //aqui eu uso o IAction result pq o NoContent não devolve nenhum objeto json
+    }
+
 
 }
