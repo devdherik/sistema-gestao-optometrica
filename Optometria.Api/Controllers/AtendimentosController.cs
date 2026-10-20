@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Optometria.Api.Data;
@@ -159,6 +160,55 @@ public class AtendimentosController : ControllerBase
     }
 
 
+    // GET /api/atendimentos/paciente/{pacienteId} - Obter histórico de consultas do paciente
+    [HttpGet("paciente/{pacienteId}")]
+    public async Task<ActionResult<List<AtendimentoDto>>> ObterHistoricoPorPaciente(int pacienteId)
+    {
+        var atendimentos = await _contexto.Atendimentos
+            .Include(a => a.Paciente)
+            .Include(a => a.OpticaOrigem)
+            .Where(a => a.PacienteId == pacienteId)
+            .OrderByDescending(a => a.DataAtendimento)
+            .Select(a => new AtendimentoDto
+            {
+                Id = a.Id,
+                PacienteId = a.PacienteId,
+                NomePaciente = a.Paciente != null ? a.Paciente.NomeCompleto : null,
+                OpticaOrigemId = a.OpticaOrigemId,
+                NomeOptica = a.OpticaOrigem != null ? a.OpticaOrigem.Nome : "Particular",
+                DataAtendimento = a.DataAtendimento,
+                QueixaPrincipal = a.QueixaPrincipal,
+                DistanciaPupilar = a.DistanciaPupilar,
+                SemNecessidadeNovaCorrecao = a.SemNecessidadeNovaCorrecao,
+                DataSugeridaRetorno = a.DataSugeridaRetorno,
+                ObservacoesAtendimento = a.ObservacoesAtendimento,
+                Lentes = a.Lentes,
+                Tratamentos = a.Tratamentos,
+                OlhoDireito = a.OlhoDireito != null ? new RefratometriaOlhoDto
+                {
+                    Esferico = a.OlhoDireito.Esferico,
+                    Cilindrico = a.OlhoDireito.Cilindrico,
+                    Eixo = a.OlhoDireito.Eixo,
+                    Adicao = a.OlhoDireito.Adicao,
+                    AvLonge = a.OlhoDireito.AvLonge,
+                    AvPerto = a.OlhoDireito.AvPerto,
+                    Dnp = a.OlhoDireito.Dnp
+                } : null,
+                OlhoEsquerdo = a.OlhoEsquerdo != null ? new RefratometriaOlhoDto
+                {
+                    Esferico = a.OlhoEsquerdo.Esferico,
+                    Cilindrico = a.OlhoEsquerdo.Cilindrico,
+                    Eixo = a.OlhoEsquerdo.Eixo,
+                    Adicao = a.OlhoEsquerdo.Adicao,
+                    AvLonge = a.OlhoEsquerdo.AvLonge,
+                    AvPerto = a.OlhoEsquerdo.AvPerto,
+                    Dnp = a.OlhoEsquerdo.Dnp
+                } : null
+            })
+            .ToListAsync();
+
+            return  Ok(atendimentos);
+    } 
 
 
 }
