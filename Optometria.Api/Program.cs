@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Optometria.Api.Data;
 
 
@@ -19,6 +20,24 @@ builder.Services.AddDbContext<OptometriaDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirFrontEnd", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // a porta do vite
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
+
+
+
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,6 +50,8 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+
+app.UseCors("PermitirFrontEnd");
 
 app.UseAuthorization();
 
