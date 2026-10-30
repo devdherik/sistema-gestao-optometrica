@@ -5,7 +5,7 @@ function App(){
   return (
     <div>
       <h1>Sistema de Gestão Optométrica</h1>
-      <p>Em contrução...</p>
+      <p>Em construção...</p>
     </div>
   );
 }
