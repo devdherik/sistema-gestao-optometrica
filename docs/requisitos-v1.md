@@ -6,10 +6,10 @@ Documento principal de requisitos do sistema. Define o escopo do MVP, as regras 
 
 ## 1. Visão Geral e Objetivo
 
-O sistema tem como objetivo informatizar o atendimento clínico da profissional de optometria, substituindo o receituário de papel por um prontuário eletrônico com emissão de prescrição pronta para impressão e entrega ao paciente/ótica.
+O sistema tem como objetivo informatizar o atendimento clínico do profissional de optometria, substituindo o receituário de papel por um prontuário eletrônico com emissão de prescrição pronta para impressão e entrega ao paciente/ótica.
 
 ### 1.1 Usuário do Sistema
-* **Profissional de Optometria:** Única usuária ativa do sistema nesta versão. Realiza cadastros, registra atendimentos, consulta históricos e emite receitas.
+* **Profissional de Optometria:** Único usuário ativo do sistema nesta versão. Realiza cadastros, registra atendimentos, consulta históricos e emite receitas.
 * *Nota:* Pacientes e óticas parceiras não acessam o sistema.
 
 ### 1.2 Fora de Escopo do MVP
