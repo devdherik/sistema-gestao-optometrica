@@ -7,5 +7,8 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    proxy: {
+      '/api': { target: process.env.IRIS_API_TARGET || 'http://localhost:5145', changeOrigin: true },
+    },
   },
 })

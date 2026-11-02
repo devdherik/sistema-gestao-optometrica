@@ -1,36 +1,49 @@
-# Frontend Íris
+# Frontend Íris — revisão pelo Figma e PDF
 
-Implementação local baseada nos quadros “Início — Desktop”, “Perfil e histórico — Desktop”, “Atendimento clínico — Desktop” e “Receituário — Desktop” do Figma Gestão Optometrica.
+Implementação local dos quadros Início, Perfil e histórico, Atendimento clínico, Óticas parceiras e Receituário. Mantém os dados reais; os exemplos da referência não são inseridos no banco do consultório.
 
-## Estrutura
+## O que mudou
 
-- `src/App.jsx`: cabeçalho, navegação, início, pacientes, histórico, óticas e formulários cadastrais.
-- `src/Clinical.jsx`: registro clínico e receita para impressão.
-- `src/index.css`: identidade visual Íris, adaptação a telas menores e impressão.
-- `src/services/api.js`: serviços existentes da API .NET, com leitura de mensagens de validação.
+- Painel com atendimentos recentes, resumo de OD/OE, filtro de período e paginação real.
+- Prontuário com linha do tempo e comparação descritiva com o registro anterior.
+- Formulário clínico com cabeçalho comum de medidas, seções numeradas e ação Salvar e Gerar Receita.
+- Óticas em modal com formulário e lista lado a lado. Por decisão do usuário, continuam os campos nome, contato e endereço, com exclusão bloqueada por vínculos; sem telefone separado nem status ativo/inativo.
+- Receita em folha branca, com painel lateral e CSS para impressão. Baixar PDF abre a impressão do navegador, onde se escolhe Salvar como PDF. Impressão física não foi validada.
+- Dados fictícios de clínica/endereço/credenciais não foram copiados. Novos pacientes no mês não são calculados porque o modelo não registra data de cadastro.
+- Perto é calculado conforme a fórmula exibida na referência: esférico + adição, somente quando ambos foram informados. Zero é preservado e campos ausentes permanecem sem valor. DNPs são somadas apenas para conferência; o campo DP continua manual.
 
-## Fluxos
+## Backend
 
-Buscar paciente → Ver Prontuário → Nova Consulta → Salvar atendimento → Ver atendimento e receita → Imprimir receita.
+`GET /api/painel?dias=7&pagina=1&hoje=2026-11-01&busca=` fornece contagens do dia e cinco registros por página. Períodos aceitos: 7, 30, 90 e 0 (todos). A data enviada pelo navegador define o dia local.
 
-Pacientes → Novo Paciente; prontuário → Editar cadastro.
+Exclusão de pacientes e óticas: 204 sem vínculos; 409 com mensagem amigável quando há atendimentos; 404 para identificadores inexistentes. A exclusão e a condição de ausência de vínculo usam uma única instrução SQL, sem apagar o histórico.
 
-Óticas Parceiras → Nova ótica ou Editar.
+O Vite usa `/api` com proxy para `localhost:5145`. Para implantação fora do Vite, configurar proxy equivalente ou `VITE_API_URL`. `IRIS_API_TARGET` permite direcionar exclusivamente uma prévia de teste para outra API.
 
-## Adaptações ao backend atual
+## Validação reproduzível
 
-- A API fornece histórico por paciente, mas não uma listagem geral de consultas. Por isso o início permite escolher o paciente e consulta seu histórico; não apresenta totais globais de atendimentos do dia.
-- Contagens de pacientes e óticas vêm da API. Não existem dados fictícios ou cadastro de demonstração no frontend.
-- Busca por nome e telefone e paginação são locais, sobre a lista de pacientes retornada pela API.
-- Edição/exclusão de atendimentos e exclusões cadastrais não foram incluídas nesta interface.
-- Campos numéricos vazios são enviados como `null`; zero informado permanece zero. Não há cálculo automático de grau de perto nem preenchimento clínico por inferência.
-- Impressão usa o navegador, somente com os dados do atendimento e identificação do paciente. A assinatura e identificação do profissional têm espaço próprio, sem inventar credenciais ou endereço da clínica.
-- A navegação desta primeira versão usa estado React; recarregar a página retorna ao início e descarta formulários não salvos.
+Na raiz:
 
-## Execução
+```powershell
+dotnet build Optometria.Api --no-restore -p:UseAppHost=false -o .tmp/backend-build
+dotnet run --project tests/BackendChecks
+npm --prefix optometria-web run build
+```
 
-Inicie a API conforme o README principal. Na pasta `optometria-web`, execute `npm run dev -- --port 5173 --strictPort` e acesse http://localhost:5173.
+Os checks usam SQLite em memória e verificam exclusões, preservação de vínculos, 404, período, paginação e contagens. O argumento opcional `.tmp/iris-qa.db` cria somente uma base isolada de exemplos para revisão visual.
 
-## Validação
+Conferidos no navegador: painel, perfil, receita, modal de óticas e gravação de uma consulta no banco isolado com zero explícito e campos vazios. Build da API e do frontend passaram. O restore não conseguiu consultar a auditoria de vulnerabilidades do NuGet por restrição de rede; os pacotes já estavam disponíveis.
 
-Build de produção concluído. Conferidos no navegador: tela inicial conectada à API, abertura do prontuário e histórico vazio e formulário de novo atendimento. Gravação clínica e impressão em papel ainda precisam de validação com dados de teste em banco separado.
+## Execução normal
+
+```powershell
+dotnet run --project Optometria.Api --launch-profile http
+```
+
+Em outro terminal:
+
+```powershell
+npm --prefix optometria-web run dev
+```
+
+Acesse http://localhost:5173. Navegação utiliza estado React; recarregar a tela volta ao início. Formulários não salvos não persistem.

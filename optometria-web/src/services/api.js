@@ -1,5 +1,5 @@
 // URL base da API .NET
-const API_URL = 'http://localhost:5145/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 async function handleResponse(response) {
   if (!response.ok) {
@@ -126,4 +126,8 @@ export const opticaService = {
     });
     return handleResponse(res);
   },
+};
+
+export const painelService = {
+  obter: async ({dias=7,busca='',pagina=1,hoje}) => handleResponse(await fetch(`${API_URL}/painel?${new URLSearchParams({dias,busca,pagina,hoje})}`)),
 };

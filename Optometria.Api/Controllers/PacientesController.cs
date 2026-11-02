@@ -166,9 +166,13 @@ public class PacientesController : ControllerBase
             return NotFound(new {mensagem = "Paciente não encontrado"});
         }
 
-        //remove do banco
-        _contexto.Pacientes.Remove(paciente);
-        await _contexto.SaveChangesAsync();
+        // O predicado faz a verificação e a exclusão na mesma instrução SQL.
+        // Assim, um atendimento criado simultaneamente também protege o cadastro.
+        var removidos = await _contexto.Pacientes
+            .Where(p => p.Id == id && !_contexto.Atendimentos.Any(a => a.PacienteId == p.Id))
+            .ExecuteDeleteAsync();
+        if (removidos == 0)
+            return Conflict(new { mensagem = "Este paciente possui atendimentos vinculados e não pode ser excluído. O histórico clínico deve ser preservado." });
 
         return NoContent();
 
