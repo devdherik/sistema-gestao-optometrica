@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:5145/api';
 async function handleResponse(response) {
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    const message = errorData.mensagem || `Erro na requisição: ${response.statusText}`;
+    const message = errorData.mensagem || (errorData.errors && Object.values(errorData.errors).flat().join(' ')) || errorData.detail || errorData.title || `Erro na requisição: ${response.statusText}`;
     throw new Error(message);
   }
   if (response.status === 204) return null;
