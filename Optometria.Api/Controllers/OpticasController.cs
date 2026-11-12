@@ -127,6 +127,16 @@ public class OpticasController : ControllerBase
             return NotFound(new { mensagem = "Ótica não encontrada." });
         }
 
+        // Verifica se há atendimentos vinculados a esta ótica
+        var possuiAtendimentos = await _contexto.Atendimentos
+            .AnyAsync(a => a.OpticaOrigemId == id);
+        if (possuiAtendimentos)
+        {
+            return BadRequest(new { 
+                mensagem = "Não é possível excluir esta ótica, pois existem atendimentos vinculados ao histórico dela." 
+            });
+        }
+
         _contexto.Opticas.Remove(optica);
         await _contexto.SaveChangesAsync();
 

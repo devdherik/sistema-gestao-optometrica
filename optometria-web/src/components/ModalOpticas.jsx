@@ -6,7 +6,10 @@ import {
   Edit3, 
   Plus,
   Phone,
-  MapPin
+  MapPin,
+  Trash2,
+  AlertCircle,
+  CheckCircle2
 } from 'lucide-react';
 import { opticaService } from '../services/api';
 import './ModalOpticas.css';
@@ -16,9 +19,12 @@ function ModalOpticas({ aberto, onFechar }) {
   const [opticas, setOpticas] = useState([]);
   const [carregando, setCarregando] = useState(false);
   const [busca, setBusca] = useState('');
+  // Estado para exibir avisos bonitos na própria tela
+  const [aviso, setAviso] = useState(null); // { tipo: 'erro' ou 'sucesso', texto: '...' }
 
   // Guarda o ID da ótica sendo editada (null = cadastrando nova)
   const [idEditando, setIdEditando] = useState(null);
+  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
 
 
   // Estado do formulário de nova ótica
@@ -34,6 +40,17 @@ function ModalOpticas({ aberto, onFechar }) {
       carregarOpticas();
     }
   }, [aberto]);
+
+  // Limpa o aviso automaticamente após 8 segundos
+  useEffect(() => {
+    if (!aviso) return;
+
+    const timer = setTimeout(() => {
+      setAviso(null);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, [aviso]);
 
   async function carregarOpticas() {
     setCarregando(true);
@@ -65,13 +82,52 @@ function ModalOpticas({ aberto, onFechar }) {
     function cancelarEdicao() {
         setIdEditando(null);
         setForm({ nome: '', contato: '', endereco: '' });
+        setConfirmandoExclusao(false);
     }
+
+    // Reseta completamente o modal para o estado inicial e fecha
+    function handleFecharModal() {
+        cancelarEdicao();
+        setBusca('');
+        setAviso(null);
+        if (onFechar) {
+            onFechar();
+        }
+    }
+
+
+
+    async function handleExcluir(optica) {
+        if (!confirmandoExclusao) {
+            setConfirmandoExclusao(true);
+            return;
+        }
+
+        setAviso(null);
+        setConfirmandoExclusao(false);
+
+        try {
+            await opticaService.excluir(optica.id);
+            
+            if (idEditando === optica.id) {
+                cancelarEdicao();
+            }
+
+            await carregarOpticas();
+        } catch (erro) {
+            setAviso({
+                tipo: 'erro',
+                texto: erro.message
+            });
+        }
+    }
+
 
   // Submeter o cadastro para a API .NET
   async function handleSalvar(e) {
     e.preventDefault();
     if (!form.nome) {
-      alert('O nome da ótica é obrigatório!');
+      setAviso({ tipo: 'erro', texto: 'O nome da ótica é obrigatório!' });
       return;
     }
 
@@ -83,19 +139,29 @@ function ModalOpticas({ aberto, onFechar }) {
         endereco: form.endereco
       };
 
-        if (idEditando) {
-            // Se tem ID, atualiza (PUT)
-            await opticaService.atualizar(idEditando, dadosEnvio);
-            } else {
-            // Se não tem ID, cria nova (POST)
-            await opticaService.criar(dadosEnvio);
-        }
-        cancelarEdicao();
-        await carregarOpticas();
-
+      if (idEditando) {
+        // Se tem ID, atualiza (PUT)
+        await opticaService.atualizar(idEditando, dadosEnvio);
+        setAviso({
+          tipo: 'sucesso',
+          texto: `Cadastro da "${form.nome}" atualizado com sucesso!`
+        });
+      } else {
+        // Se não tem ID, cria nova (POST)
+        await opticaService.criar(dadosEnvio);
+        setAviso({
+          tipo: 'sucesso',
+          texto: `Ótica "${form.nome}" cadastrada com sucesso!`
+        });
+      }
       
+      cancelarEdicao();
+      await carregarOpticas();
     } catch (erro) {
-      alert(`Erro ao cadastrar ótica: ${erro.message}`);
+      setAviso({
+        tipo: 'erro',
+        texto: `Erro ao salvar ótica: ${erro.message}`
+      });
     }
   }
 
@@ -111,9 +177,8 @@ function ModalOpticas({ aberto, onFechar }) {
   if (!aberto) return null;
 
   return (
-    <div className="modal-overlay" onClick={onFechar}>
-      {/* O stopPropagation impede que clicar dentro do modal feche ele */}
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay">
+      <div className="modal-content">
         
         {/* CABEÇALHO */}
         <div className="modal-header">
@@ -126,7 +191,7 @@ function ModalOpticas({ aberto, onFechar }) {
               <p>Gerencie as origens dos seus atendimentos.</p>
             </div>
           </div>
-          <button className="btn-close-modal" onClick={onFechar}>
+          <button className="btn-close-modal" onClick={handleFecharModal} title="Fechar modal">
             <X size={20} />
           </button>
         </div>
@@ -140,6 +205,21 @@ function ModalOpticas({ aberto, onFechar }) {
             <p className="col-subtitle">
               {idEditando ? 'Atualize os dados de contato e endereço.' : 'Dados para contato e encaminhamento.'}
             </p>
+
+            {/* BANNER DE ALERTA DO PRÓPRIO SISTEMA */}
+            {aviso && (
+              <div className={`modal-alert modal-alert-${aviso.tipo}`}>
+                {aviso.tipo === 'sucesso' ? (
+                  <CheckCircle2 size={18} className="alert-icon" />
+                ) : (
+                  <AlertCircle size={18} className="alert-icon" />
+                )}
+                <span className="alert-text">{aviso.texto}</span>
+                <button type="button" className="btn-close-alert" onClick={() => setAviso(null)}>
+                  <X size={14} />
+                </button>
+              </div>
+            )}
 
             <form onSubmit={handleSalvar} className="optica-form">
               <div className="form-group">
@@ -202,6 +282,42 @@ function ModalOpticas({ aberto, onFechar }) {
                   </button>
                 )}
               </div>
+
+              {idEditando && (
+                <div className="form-danger-zone">
+                  {confirmandoExclusao ? (
+                    <div className="confirm-delete-box">
+                      <span className="confirm-text">Deseja realmente desativar esta parceria?</span>
+                      <div className="confirm-actions">
+                        <button 
+                          type="button" 
+                          className="btn-confirm-delete"
+                          onClick={() => handleExcluir({ id: idEditando, nome: form.nome })}
+                        >
+                          Sim, desativar
+                        </button>
+                        <button 
+                          type="button" 
+                          className="btn-cancel-delete"
+                          onClick={() => setConfirmandoExclusao(false)}
+                        >
+                          Não
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button 
+                      type="button" 
+                      className="btn-excluir-optica"
+                      onClick={() => handleExcluir({ id: idEditando, nome: form.nome })}
+                      title="Desativar/Excluir esta parceria"
+                    >
+                      <Trash2 size={15} />
+                      <span>Desativar parceria</span>
+                    </button>
+                  )}
+                </div>
+              )}
             </form>
           </div>
 
@@ -275,23 +391,14 @@ function ModalOpticas({ aberto, onFechar }) {
                             <span>Editando neste modal</span>
                           </span>
                         ) : (
-                          <>
-                            <button 
-                              type="button" 
-                              className="action-link"
-                              onClick={() => iniciarEdicao(optica)}
-                            >
-                              <Edit3 size={14} />
-                              <span>Editar cadastro</span>
-                            </button>
-                            <button 
-                              type="button" 
-                              className="action-link action-link-muted"
-                              onClick={() => alert('Em breve')}
-                            >
-                              <span>Desativar parceria</span>
-                            </button>
-                          </>
+                          <button 
+                            type="button" 
+                            className="action-link"
+                            onClick={() => iniciarEdicao(optica)}
+                          >
+                            <Edit3 size={14} />
+                            <span>Editar cadastro</span>
+                          </button>
                         )}
                       </div>
                     </div>
@@ -305,7 +412,7 @@ function ModalOpticas({ aberto, onFechar }) {
         {/* RODAPÉ */}
         <div className="modal-footer">
           <span className="footer-note">Novas óticas ficam disponíveis no campo Ótica de Origem.</span>
-          <button type="button" className="btn-concluir" onClick={onFechar}>
+          <button type="button" className="btn-concluir" onClick={handleFecharModal}>
             Concluir
           </button>
         </div>
