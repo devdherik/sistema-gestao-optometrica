@@ -2,6 +2,9 @@
 
 Documento principal de requisitos do sistema. Define o escopo do MVP, as regras de negócio, os requisitos funcionais e os dados gerenciados, substituindo anotações preliminares e levantamentos provisórios.
 
+> **Versão do Documento:** 1.1  
+> **Última Atualização:** 13/11/2026 (Refinamento do módulo de Óticas Parceiras e inclusão da RN-08)
+
 ---
 
 ## 1. Visão Geral e Objetivo
@@ -31,6 +34,7 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 * **RN-05 (Sem Necessidade de Correção):** O profissional pode assinalar que o paciente não necessita de nova correção. A receita/documento do atendimento pode ser impressa normalmente mesmo com essa opção marcada.
 * **RN-06 (Histórico Clínico):** O histórico de um paciente é composto pela lista cronológica de seus atendimentos. Consultar consultas anteriores não deve sobrepor automaticamente os dados do exame atual.
 * **RN-07 (Emissão de Prescrição):** A partir dos dados salvos no atendimento, o sistema deve gerar uma versão formatada para impressão direta em folha padrão de receita.
+* **RN-08 (Integridade de Ótica com Histórico):** Uma ótica parceira não pode ser excluída do sistema se já possuir atendimentos vinculados a ela, preservando o histórico e a rastreabilidade da origem dos pacientes.
 
 ---
 
@@ -43,10 +47,12 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 * **RF-04:** Excluir paciente (quando sem atendimentos associados ou mediante confirmação).
 
 ### 3.2 Módulo Óticas Parceiras
-* **RF-05:** Cadastrar ótica parceira com nome, telefone/contato e endereço.
-* **RF-06:** Listar e filtrar óticas parceiras cadastradas.
-* **RF-07:** Editar dados de contato e endereço de uma ótica.
-* **RF-08:** Excluir registro de ótica parceira.
+> *Nota de Interface (UX):* O gerenciamento de óticas é disponibilizado de forma global através de um modal na barra de navegação (`Navbar`), permitindo cadastro, edição e consulta rápida a qualquer momento sem sair ou interromper a tela de atendimento. O modal é estruturado em duas colunas: formulário de cadastro/edição à esquerda e listagem pesquisável em tempo real à direita.
+
+* **RF-05:** Cadastrar ótica parceira com nome, telefone/contato e endereço (campos obrigatórios).
+* **RF-06:** Listar óticas parceiras ativas com contador total e filtragem em tempo real por nome ou contato.
+* **RF-07:** Editar dados cadastrais (nome, contato, endereço) carregando os dados diretamente no formulário do modal.
+* **RF-08:** Excluir registro de ótica parceira com confirmação em duas etapas na interface (ação "Desativar parceria"), sendo a exclusão bloqueada caso a parceira possua atendimentos associados (conforme **RN-08**).
 
 ### 3.3 Módulo Atendimentos e Prescrição
 * **RF-09:** Iniciar novo atendimento vinculado a um paciente existente.
@@ -110,3 +116,13 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 * **RNF-02 (Desempenho e Agilidade):** Interface ágil projetada para ser preenchida rapidamente durante a própria consulta sem travamentos.
 * **RNF-03 (Privacidade de Dados):** Dados de pacientes e exames mantidos sob controle local da profissional de saúde.
 * **RNF-04 (Compatibilidade de Impressão):** Layout de prescrição otimizado para navegadores modernos e impressoras térmicas ou jato de tinta/laser no formato padrão de receita.
+
+---
+
+## 6. Histórico de Revisões
+
+| Versão | Data | Autor / Responsável | Descrição das Alterações |
+|:---:|:---:|---|---|
+| **1.0** | 06/11/2026 | Time de Desenvolvimento | Especificação inicial de requisitos e escopo do MVP. |
+| **1.1** | 13/11/2026 | Time de Desenvolvimento | Inclusão da regra **RN-08** (bloqueio de exclusão de óticas com histórico), detalhamento do fluxo em modal global de Óticas (RF-05 a RF-08) e dupla confirmação ("Desativar parceria"). |
+

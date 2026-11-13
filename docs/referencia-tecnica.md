@@ -11,9 +11,15 @@ O sistema adota uma arquitetura em duas camadas desacopladas (Frontend SPA e Bac
 ```mermaid
 flowchart LR
     subgraph Frontend ["Frontend (optometria-web)"]
-        UI["React 19 (Componentes)"]
+        Navbar["Navbar (Navegação & Gatilhos)"]
+        ModalOpticas["ModalOpticas (CRUD Global)"]
+        Views["Telas / Visões (React 19)"]
         Service["api.js (Fetch API)"]
-        UI --> Service
+        
+        Navbar --> ModalOpticas
+        Navbar --> Views
+        ModalOpticas --> Service
+        Views --> Service
     end
 
     subgraph Backend ["Backend (Optometria.Api)"]
@@ -32,7 +38,7 @@ flowchart LR
     Service -->|HTTP JSON / Porta 5145| Controller
 ```
 
-* **Frontend:** Single Page Application (SPA) desenvolvida com **React 19** e empacotada com **Vite 8**, executando localmente na porta `5173`.
+* **Frontend:** Single Page Application (SPA) desenvolvida com **React 19**, empacotada com **Vite 8**, biblioteca de ícones **Lucide React** (`lucide-react`) e executando localmente na porta `5173`.
 * **Backend:** API REST desenvolvida em **ASP.NET Core (.NET 10)**, executando na porta `5145`.
 * **Banco de Dados:** **SQLite**, persistido no arquivo local `Optometria.Api/optometria.db`.
 
@@ -108,14 +114,32 @@ O backend está organizado em pastas por responsabilidade dentro do projeto `Opt
   * Criação: `CriarPacienteDto`, `CriarAtendimentoDto`, `CriarOpticaDto`.
   * Leitura: `PacienteDto`, `AtendimentoDto`, `OpticaDto`, `RefratometriaOlhoDto`.
 * **`Controllers/`:** Controladores que expõem as rotas REST (`PacientesController`, `AtendimentosController`, `OpticasController`). Responsáveis por validar os dados recebidos, orquestrar a consulta ou salvamento e retornar o código HTTP adequado (ex.: `200 OK`, `201 Created`, `400 BadRequest`, `404 NotFound`, `204 NoContent`).
+  * *Validação de Integridade:* Em `OpticasController.Excluir(id)`, o sistema verifica se a parceira possui atendimentos vinculados (`AnyAsync(a => a.OpticaOrigemId == id)`); se houver, a exclusão é rejeitada com status `400 BadRequest` e mensagem amigável, garantindo a integridade dos dados históricos.
 * **`Data/`:** Contém o `OptometriaDbContext`, que herda do Entity Framework Core e mapeia os `DbSet<>` das entidades, configurando relacionamentos e restrições.
 * **`Migrations/`:** Histórico de versionamento do esquema do banco de dados gerado pela ferramenta `dotnet-ef`.
 
 ---
 
-## 4. Integração Frontend-Backend
+## 4. Estrutura de Componentes do Frontend
 
-A comunicação do frontend React com a API é centralizada no módulo de serviço [optometria-web/src/services/api.js](file:///c:/Users/Usuário/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/services/api.js):
+A aplicação React em `optometria-web/` adota componentes modulares com estilização em CSS puro por componente:
+
+* **[`src/components/Navbar.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/Navbar.jsx):**
+  * Barra de navegação superior fixa com duas faixas.
+  * Faixa superior: identidade visual (*OptoSystem*), atalho direto para acionar o modal global de óticas parceiras e identificação do profissional (avatar e nome).
+  * Faixa inferior: abas de navegação principal (*Início*, *Pacientes*, *Atendimentos*) e exibição dinâmica da data atual formatada por extenso no padrão brasileiro (`Intl.DateTimeFormat`).
+* **[`src/components/ModalOpticas.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/ModalOpticas.jsx):**
+  * Modal global exibido em sobreposição (*overlay*), permitindo acesso ao CRUD completo de óticas a qualquer momento sem trocar de rota ou perder dados preenchidos em atendimentos.
+  * **Layout em duas colunas:**
+    * *Coluna da esquerda:* Formulário reativo para cadastro de nova ótica ou edição de registro existente, com zona de exclusão protegida por confirmação em duas etapas ("Desativar parceria").
+    * *Coluna da direita:* Listagem com indicador de status (*Ativa* / *Em edição*), contador total de parceiras e campo de busca rápida em tempo real por nome ou telefone/contato.
+  * **Feedback visual:** Sistema de alertas interno (*banner* de sucesso ou erro) com temporizador para auto-ocultamento após 8 segundos.
+
+---
+
+## 5. Integração Frontend-Backend
+
+A comunicação do frontend React com a API é centralizada no módulo de serviço [optometria-web/src/services/api.js](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/services/api.js):
 
 * **URL Base:** `http://localhost:5145/api`.
 * **Políticas de CORS:** Configurada no `Program.cs` do backend para aceitar requisições de `http://localhost:5173`.
@@ -123,7 +147,7 @@ A comunicação do frontend React com a API é centralizada no módulo de servi�
 
 ---
 
-## 5. Testes e Exploração da API
+## 6. Testes e Exploração da API
 
 Com o backend em execução (`dotnet run --launch-profile http`), a especificação OpenAPI interativa pode ser acessada em:
 

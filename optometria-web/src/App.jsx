@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import Navbar from './components/Navbar';
 import ModalOpticas from './components/ModalOpticas';
+import { LayoutGrid, Users, ClipboardList } from 'lucide-react';
 
 function App(){
   // Estado que guarda qual aba está ativa no momento
@@ -20,6 +21,36 @@ function App(){
         aberto={modalOpticasAberto}
         onFechar={() => setModalOpticasAberto(false)}
       />
+
+      <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+        {abaAtiva === 'inicio' && (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <LayoutGrid size={24} />
+              <h2>Painel de Início</h2>
+            </div>
+            <p>Visão geral e atalhos rápidos do consultório.</p>
+          </div>
+        )}
+        {abaAtiva === 'pacientes' && (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Users size={24} />
+              <h2>Pacientes</h2>
+            </div>
+            <p>Aqui vamos construir o CRUD completo de pacientes.</p>
+          </div>
+        )}
+        {abaAtiva === 'atendimentos' && (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ClipboardList size={24} />
+              <h2>Atendimentos e Consultas</h2>
+            </div>
+            <p>Histórico clínico, tabela refrativa OD/OE e emissão de receitas.</p>
+          </div>
+        )}
+      </main>
 
     </div> 
   );

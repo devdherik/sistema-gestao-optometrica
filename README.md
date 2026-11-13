@@ -8,7 +8,7 @@ Sistema web voltado para a rotina de atendimento optométrico. Permite cadastrar
 ## Tecnologias
 
 - Backend: ASP.NET Core (.NET 10), Entity Framework Core, SQLite e Swagger.
-- Frontend: React 19, Vite 8 e React Router (dependência instalada).
+- Frontend: React 19, Vite 8, Lucide React (ícones) e React Router (dependência instalada).
 
 ## Estrutura do repositório
 
