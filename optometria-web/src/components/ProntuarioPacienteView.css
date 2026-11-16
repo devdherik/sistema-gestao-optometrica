@@ -1,0 +1,445 @@
+.prontuario-container {
+  width: 100%;
+}
+
+/* Topo de Navegação & Botão Voltar */
+.prontuario-topo-navegacao {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.btn-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #0f766e;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+
+.btn-voltar:hover {
+  color: #0d655f;
+  text-decoration: underline;
+}
+
+.breadcrumb-separador {
+  color: #cbd5e1;
+}
+
+.breadcrumb-ativo {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Cabeçalho Principal */
+.prontuario-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.prontuario-titulo {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.prontuario-subtitulo {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Botão Verde "+ Nova Consulta" */
+.btn-nova-consulta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #0f766e;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.btn-nova-consulta:hover {
+  background-color: #0d655f;
+}
+
+.btn-nova-consulta:active {
+  transform: scale(0.98);
+}
+
+/* Alertas de Feedback */
+.prontuario-alerta {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.prontuario-alerta.erro {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.prontuario-alerta.sucesso {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.btn-fechar-alerta {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Faixa de Resumo do Paciente */
+.paciente-resumo-faixa {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.paciente-resumo-nome {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.paciente-resumo-consulta {
+  font-size: 0.88rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Grid Principal de 2 Colunas */
+.prontuario-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .prontuario-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   COLUNA ESQUERDA: CARD DE CADASTRO
+   ========================================================================== */
+.prontuario-card-cadastro {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.avatar-prontuario-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar-circulo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: 1px solid #e2e8f0;
+}
+
+.prontuario-label-small {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.prontuario-codigo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cadastro-divisor {
+  height: 1px;
+  background-color: #f1f5f9;
+  margin: 4px 0;
+}
+
+.cadastro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cadastro-campo-label {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.cadastro-campo-valor {
+  font-size: 0.95rem;
+  color: #0f172a;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.cadastro-campo-nota {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.observacoes-texto {
+  font-weight: 400;
+  color: #334155;
+  background-color: #f8fafc;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+  font-size: 0.88rem;
+}
+
+/* Ações da Ficha */
+.cadastro-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-editar-ficha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-editar-ficha:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.btn-excluir-ficha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: 1px dashed #fca5a5;
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-excluir-ficha:hover {
+  background-color: #fef2f2;
+}
+
+/* Caixa de confirmação de exclusão (idêntica ao modal de óticas) */
+.exclusao-confirmacao-box {
+  background-color: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exclusao-confirmacao-texto {
+  font-size: 0.82rem;
+  color: #9f1239;
+  line-height: 1.4;
+}
+
+.exclusao-confirmacao-botoes {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-confirm-delete {
+  flex: 1;
+  background-color: #e11d48;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-confirm-delete:hover:not(:disabled) {
+  background-color: #be123c;
+}
+
+.btn-cancel-delete {
+  background-color: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-cancel-delete:hover:not(:disabled) {
+  background-color: #f1f5f9;
+}
+
+/* ==========================================================================
+   COLUNA DIREITA: HISTÓRICO DE CONSULTAS
+   ========================================================================== */
+.prontuario-card-historico {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  min-height: 380px;
+}
+
+.historico-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.historico-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.badge-total-consultas {
+  background-color: #f1f5f9;
+  color: #0369a1;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.historico-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #64748b;
+  text-align: center;
+  gap: 10px;
+}
+
+.icone-historico-vazio {
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.historico-vazio-titulo {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.historico-vazio-subtitulo {
+  font-size: 0.9rem;
+  color: #64748b;
+  max-width: 380px;
+}
+
+.btn-primeira-consulta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f1f5f9;
+  color: #0f766e;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.15s ease;
+}
+
+.btn-primeira-consulta:hover {
+  background-color: #e0f2fe;
+  border-color: #0284c7;
+}
+
+.historico-lista-placeholder {
+  padding: 24px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 0.9rem;
+  text-align: center;
+}

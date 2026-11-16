@@ -1,0 +1,268 @@
+/* Overlay de fundo escurecido padronizado com ModalOpticas */
+.modal-paciente-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 24px;
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+/* Card central do modal */
+.modal-paciente-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+/* Animação suave exclusiva do fundo (fade-in apenas de opacidade, sem movimento) */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animação exclusiva da caixa branca (escala e deslocamento vertical) */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Cabeçalho */
+.modal-paciente-header {
+  padding: 24px 32px 18px 32px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-paciente-titulo {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.modal-paciente-subtitulo {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Botão de Fechar padronizado com o de Óticas */
+.modal-paciente-header .btn-close-modal {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.modal-paciente-header .btn-close-modal:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Alertas de Feedback */
+.modal-paciente-aviso {
+  margin: 16px 32px 0 32px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.modal-paciente-aviso.erro {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.modal-paciente-aviso.sucesso {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+/* Corpo do formulário */
+.modal-paciente-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-paciente-body {
+  padding: 20px 32px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(90vh - 170px);
+  overflow-y: auto;
+}
+
+/* Seções de campos */
+.form-secao-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.form-secao-espacamento {
+  margin-top: 8px;
+}
+
+.form-secao-titulo {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.form-secao-obrigatorio {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* Grupos de inputs */
+.form-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #94a3b8;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.45;
+  font-family: inherit;
+}
+
+/* Rodapé do Modal */
+.modal-paciente-footer {
+  padding: 16px 32px 20px 32px;
+  background-color: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.modal-paciente-footer-hint {
+  font-size: 0.84rem;
+  color: #64748b;
+}
+
+.modal-paciente-footer-acoes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-modal-cancelar {
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-modal-cancelar:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Botão Salvar padronizado com o tom #0f766e do ModalOpticas */
+.btn-modal-salvar {
+  background-color: #0f766e;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.btn-modal-salvar:hover:not(:disabled) {
+  background-color: #0d655f;
+}
+
+.btn-modal-salvar:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-modal-salvar:disabled,
+.btn-modal-cancelar:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

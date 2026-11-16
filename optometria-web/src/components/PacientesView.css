@@ -1,0 +1,474 @@
+.pacientes-container {
+  width: 100%;
+}
+
+/* Breadcrumb */
+.pacientes-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.breadcrumb-separador {
+  color: #94a3b8;
+}
+
+.breadcrumb-ativo {
+  color: #0f172a;
+  font-weight: 500;
+}
+
+/* Cabeçalho */
+.pacientes-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.pacientes-titulo {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.pacientes-subtitulo {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Botão Verde "+ Novo paciente" */
+.btn-novo-paciente {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #15803d; /* Verde elegante do design */
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-novo-paciente:hover {
+  background-color: #166534;
+}
+
+.btn-novo-paciente:active {
+  transform: scale(0.98);
+}
+
+/* Barra de Filtros e Busca */
+.pacientes-filtros-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* Campo de Busca com Botão Lupa Integrado */
+.busca-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding-left: 14px;
+  padding-right: 4px;
+  height: 44px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.busca-input-wrapper:focus-within {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.busca-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.92rem;
+  color: #0f172a;
+  background: transparent;
+}
+
+.busca-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Botão Lupa na ponta direita */
+.btn-busca-lupa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-busca-lupa:hover {
+  background-color: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+}
+
+.btn-busca-lupa:active {
+  transform: scale(0.95);
+}
+
+/* Dropdowns / Selects customizados */
+.filtro-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filtro-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  height: 44px;
+  padding: 0 36px 0 14px;
+  font-size: 0.9rem;
+  color: #334155;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filtro-select:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.select-icone {
+  position: absolute;
+  right: 12px;
+  color: #64748b;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   CARD DA TABELA DE PACIENTES
+   ========================================================================== */
+.pacientes-tabela-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+/* Cabeçalho do Card */
+.tabela-card-header {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.tabela-card-titulo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.tabela-card-subtitulo {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.badge-novos-mes {
+  background-color: #f1f5f9;
+  color: #0369a1;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Tabela */
+.tabela-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabela-pacientes {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tabela-pacientes thead tr {
+  background-color: #fafafa;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tabela-pacientes th {
+  padding: 14px 24px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabela-pacientes th.th-acoes {
+  text-align: right;
+}
+
+.tabela-pacientes tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.tabela-pacientes tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.tabela-pacientes td {
+  padding: 18px 24px;
+  font-size: 0.92rem;
+  color: #334155;
+  vertical-align: middle;
+}
+
+/* Estilos de colunas específicas */
+.td-paciente-nome {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.td-contato {
+  color: #475569;
+}
+
+.td-data {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+/* Badge Ótica de Origem */
+.badge-origem {
+  display: inline-block;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 16px;
+  border: 1px solid #dbeafe;
+}
+
+/* Botões de Ações */
+.td-acoes {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.btn-acao-prontuario {
+  display: block;
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #15803d; /* Verde escuro do design */
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 2px 0;
+  text-align: right;
+  transition: color 0.15s ease;
+}
+
+.btn-acao-prontuario:hover {
+  color: #166534;
+  text-decoration: underline;
+}
+
+.btn-acao-editar {
+  display: block;
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 2px 0;
+  text-align: right;
+  transition: color 0.15s ease;
+}
+
+.btn-acao-editar:hover {
+  color: #0f172a;
+  text-decoration: underline;
+}
+
+/* Estados de feedback dentro do card */
+.tabela-feedback {
+  padding: 60px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  gap: 12px;
+}
+
+.tabela-feedback.erro {
+  color: #dc2626;
+}
+
+.tabela-feedback.vazio {
+  color: #64748b;
+}
+
+.icone-vazio {
+  color: #94a3b8;
+}
+
+.vazio-titulo {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.vazio-subtitulo {
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: #0284c7;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.btn-tentar-novamente {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Rodapé com Paginação */
+.tabela-card-footer {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.paginacao-info {
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+.paginacao-controles {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-paginacao {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  color: #334155;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-paginacao:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.btn-paginacao:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-paginacao-numero {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-paginacao-numero:hover:not(.ativo) {
+  background-color: #f8fafc;
+}
+
+.btn-paginacao-numero.ativo {
+  background-color: #f0fdf4;
+  border-color: #86efac;
+  color: #15803d;
+  font-weight: 700;
+}
+
+/* Aviso de Confidencialidade */
+.pacientes-aviso-seguranca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #64748b;
+  padding: 4px 8px;
+}
+
+.icone-escudo {
+  color: #64748b;
+  flex-shrink: 0;
+}
