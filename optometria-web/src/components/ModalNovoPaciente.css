@@ -184,8 +184,8 @@
 
 .form-input:focus,
 .form-textarea:focus {
-  border-color: #0f766e;
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+  border-color: #15803d;
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.14);
 }
 
 .form-input::placeholder,
@@ -239,9 +239,9 @@
   color: #0f172a;
 }
 
-/* Botão Salvar padronizado com o tom #0f766e do ModalOpticas */
+/* Botão Salvar com o verde padronizado #15803d */
 .btn-modal-salvar {
-  background-color: #0f766e;
+  background-color: #15803d;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -254,7 +254,7 @@
 }
 
 .btn-modal-salvar:hover:not(:disabled) {
-  background-color: #0d655f;
+  background-color: #166534;
 }
 
 .btn-modal-salvar:active:not(:disabled) {

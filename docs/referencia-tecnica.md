@@ -13,13 +13,21 @@ flowchart LR
     subgraph Frontend ["Frontend (optometria-web)"]
         Navbar["Navbar (Navegação & Gatilhos)"]
         ModalOpticas["ModalOpticas (CRUD Global)"]
-        Views["Telas / Visões (React 19)"]
+        ModalPaciente["ModalNovoPaciente (Criação/Edição)"]
+        PacientesView["PacientesView (Lista, Filtro & Paginação)"]
+        ProntuarioView["ProntuarioPacienteView (Perfil & Histórico)"]
         Service["api.js (Fetch API)"]
         
         Navbar --> ModalOpticas
-        Navbar --> Views
+        Navbar --> PacientesView
+        PacientesView --> ModalPaciente
+        PacientesView --> ProntuarioView
+        ProntuarioView --> ModalPaciente
+        
         ModalOpticas --> Service
-        Views --> Service
+        PacientesView --> Service
+        ModalPaciente --> Service
+        ProntuarioView --> Service
     end
 
     subgraph Backend ["Backend (Optometria.Api)"]
@@ -114,7 +122,7 @@ O backend está organizado em pastas por responsabilidade dentro do projeto `Opt
   * Criação: `CriarPacienteDto`, `CriarAtendimentoDto`, `CriarOpticaDto`.
   * Leitura: `PacienteDto`, `AtendimentoDto`, `OpticaDto`, `RefratometriaOlhoDto`.
 * **`Controllers/`:** Controladores que expõem as rotas REST (`PacientesController`, `AtendimentosController`, `OpticasController`). Responsáveis por validar os dados recebidos, orquestrar a consulta ou salvamento e retornar o código HTTP adequado (ex.: `200 OK`, `201 Created`, `400 BadRequest`, `404 NotFound`, `204 NoContent`).
-  * *Validação de Integridade:* Em `OpticasController.Excluir(id)`, o sistema verifica se a parceira possui atendimentos vinculados (`AnyAsync(a => a.OpticaOrigemId == id)`); se houver, a exclusão é rejeitada com status `400 BadRequest` e mensagem amigável, garantindo a integridade dos dados históricos.
+  * *Validação de Integridade:* Tanto em `OpticasController.Excluir(id)` quanto em `PacientesController.Excluir(id)`, o sistema verifica preventivamente se existem atendimentos vinculados antes de remover a entidade (`AnyAsync`); havendo registros associados, a exclusão é rejeitada com status `400 BadRequest` e mensagem amigável, garantindo a integridade dos dados históricos.
 * **`Data/`:** Contém o `OptometriaDbContext`, que herda do Entity Framework Core e mapeia os `DbSet<>` das entidades, configurando relacionamentos e restrições.
 * **`Migrations/`:** Histórico de versionamento do esquema do banco de dados gerado pela ferramenta `dotnet-ef`.
 
@@ -134,6 +142,21 @@ A aplicação React em `optometria-web/` adota componentes modulares com estiliz
     * *Coluna da esquerda:* Formulário reativo para cadastro de nova ótica ou edição de registro existente, com zona de exclusão protegida por confirmação em duas etapas ("Desativar parceria").
     * *Coluna da direita:* Listagem com indicador de status (*Ativa* / *Em edição*), contador total de parceiras e campo de busca rápida em tempo real por nome ou telefone/contato.
   * **Feedback visual:** Sistema de alertas interno (*banner* de sucesso ou erro) com temporizador para auto-ocultamento após 8 segundos.
+* **[`src/components/ModalNovoPaciente.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/ModalNovoPaciente.jsx):**
+  * Modal compartilhado para **cadastro** e **edição** de pacientes.
+  * Aplica máscara em tempo real para telefone/WhatsApp (`(00) 00000-0000`), validação de campos obrigatórios (nome, data de nascimento e contato) e área para anotações clínicas livres.
+  * Feedback contextual de erro ou sucesso e integração com gatilho de recarga no componente pai (`onPacienteSalvo`).
+* **[`src/components/PacientesView.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/PacientesView.jsx):**
+  * Visão principal da aba de Pacientes, exibindo a tabela com todos os registros ativos.
+  * **Filtros e Controles:** Barra de busca mista (consulta via backend por nome e refinamento instantâneo por telefone), seletor de ordenação (*Nome A-Z*, *Nome Z-A*, *Mais recentes*) e paginação cliente com 10 registros por página.
+  * Transição de visão: ação "Ver prontuário" que passa o registro selecionado para exibição detalhada.
+* **[`src/components/ProntuarioPacienteView.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/ProntuarioPacienteView.jsx):**
+  * Visão individual do prontuário com layout em duas colunas:
+    * *Coluna esquerda (Ficha Cadastral):* Avatar com iniciais, código formatado de identificação clínica (`PAC-XXXXX`), dados de contato, data de nascimento com **cálculo automático de idade em anos**, observações permanentes e botões para "Editar cadastro" (reabre o modal preenchido) e "Excluir paciente" (com caixa de dupla confirmação antes do disparo para o backend).
+    * *Coluna direita (Histórico Clínico):* Painel que consome `atendimentoService.obterHistoricoPorPaciente(id)`, exibindo o contador e a lista cronológica das consultas realizadas.
+  * Botão de retorno rápido para a lista e atalho "Nova Consulta" que direciona para a aba de Atendimentos.
+* **Orquestração no [`src/App.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/App.jsx):**
+  * Controla o estado da aba ativa (`inicio`, `pacientes`, `atendimentos`), a exibição dos modais globais e a alternância condicional na aba de pacientes entre `PacientesView` (listagem) e `ProntuarioPacienteView` (ficha individual).
 
 ---
 

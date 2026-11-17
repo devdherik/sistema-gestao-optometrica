@@ -2,8 +2,8 @@
 
 Documento principal de requisitos do sistema. Define o escopo do MVP, as regras de negócio, os requisitos funcionais e os dados gerenciados, substituindo anotações preliminares e levantamentos provisórios.
 
-> **Versão do Documento:** 1.1  
-> **Última Atualização:** 13/11/2026 (Refinamento do módulo de Óticas Parceiras e inclusão da RN-08)
+> **Versão do Documento:** 1.2  
+> **Última Atualização:** 17/11/2026 (Especificação da interface de Pacientes, Prontuário, máscara de telefone, cálculo de idade automático e paginação)
 
 ---
 
@@ -40,11 +40,15 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 
 ## 3. Requisitos Funcionais (RF)
 
-### 3.1 Módulo Pacientes
-* **RF-01:** Cadastrar paciente com nome completo, data de nascimento, telefone e observações.
-* **RF-02:** Buscar pacientes por nome com busca textual rápida.
-* **RF-03:** Visualizar detalhes e editar informações cadastrais do paciente.
-* **RF-04:** Excluir paciente (quando sem atendimentos associados ou mediante confirmação).
+### 3.1 Módulo Pacientes e Prontuário
+> *Nota de Interface (UX):* O módulo é estruturado em duas visões integradas na aba "Pacientes":
+> 1. **Listagem e Busca (`PacientesView`):** Exibição em tabela com paginação (10 registros por página), ordenação flexível (Nome A-Z, Nome Z-A, Mais recentes) e busca que pesquisa tanto por nome (via backend) quanto por telefone/contato (refinamento instantâneo).
+> 2. **Perfil e Prontuário (`ProntuarioPacienteView`):** Ao selecionar "Ver prontuário", o sistema abre uma visão individual com código padronizado (`PAC-XXXXX`), avatar com iniciais, ficha cadastral completa, cálculo dinâmico de idade a partir da data de nascimento, indicador do total de consultas e atalho direto para iniciar novo atendimento.
+
+* **RF-01:** Cadastrar paciente com nome completo, data de nascimento, telefone/WhatsApp e observações cadastrais (via modal com máscara interativa para telefone `(00) 00000-0000` e validações de campos obrigatórios).
+* **RF-02:** Buscar pacientes por nome e telefone com busca textual rápida, suporte a ordenação e paginação de resultados.
+* **RF-03:** Visualizar detalhes do prontuário do paciente (com código identificador gerado e idade calculada) e editar informações cadastrais diretamente pelo modal.
+* **RF-04:** Excluir paciente a partir de sua ficha de prontuário, com confirmação protegida em duas etapas na interface e bloqueio no banco caso haja atendimentos vinculados.
 
 ### 3.2 Módulo Óticas Parceiras
 > *Nota de Interface (UX):* O gerenciamento de óticas é disponibilizado de forma global através de um modal na barra de navegação (`Navbar`), permitindo cadastro, edição e consulta rápida a qualquer momento sem sair ou interromper a tela de atendimento. O modal é estruturado em duas colunas: formulário de cadastro/edição à esquerda e listagem pesquisável em tempo real à direita.
@@ -125,4 +129,5 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 |:---:|:---:|---|---|
 | **1.0** | 06/11/2026 | Time de Desenvolvimento | Especificação inicial de requisitos e escopo do MVP. |
 | **1.1** | 13/11/2026 | Time de Desenvolvimento | Inclusão da regra **RN-08** (bloqueio de exclusão de óticas com histórico), detalhamento do fluxo em modal global de Óticas (RF-05 a RF-08) e dupla confirmação ("Desativar parceria"). |
+| **1.2** | 17/11/2026 | Time de Desenvolvimento | Detalhamento do módulo de Pacientes e Prontuário (`PacientesView`, `ModalNovoPaciente`, `ProntuarioPacienteView`), incluindo máscara de contato, cálculo de idade automático, código padronizado `PAC-XXXXX` e paginação/ordenação. |
 

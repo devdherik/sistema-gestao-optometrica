@@ -155,7 +155,7 @@ public class PacientesController : ControllerBase
 
     // MÉTODO PARA EXCLUIR O PACIENTE
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Exlcuir(int id)
+    public async Task<IActionResult> Excluir(int id)
     {
         //novamente procura pelo id
         var paciente = await _contexto.Pacientes.FindAsync(id);
@@ -164,6 +164,16 @@ public class PacientesController : ControllerBase
         if (paciente == null)
         {
             return NotFound(new {mensagem = "Paciente não encontrado"});
+        }
+
+        // Verifica se há atendimentos vinculados a este paciente
+        var possuiAtendimentos = await _contexto.Atendimentos
+            .AnyAsync(a => a.PacienteId == id);
+        if (possuiAtendimentos)
+        {
+            return BadRequest(new { 
+                mensagem = "Não é possível excluir este paciente, pois existem atendimentos vinculados ao histórico dele." 
+            });
         }
 
         //remove do banco

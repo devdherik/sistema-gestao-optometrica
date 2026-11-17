@@ -15,7 +15,7 @@
   gap: 6px;
   background: none;
   border: none;
-  color: #0f766e;
+  color: #15803d;
   font-weight: 600;
   cursor: pointer;
   padding: 4px 0;
@@ -23,7 +23,7 @@
 }
 
 .btn-voltar:hover {
-  color: #0d655f;
+  color: #166534;
   text-decoration: underline;
 }
 
@@ -58,12 +58,12 @@
   margin-top: 4px;
 }
 
-/* Botão Verde "+ Nova Consulta" */
+/* Botão Verde "+ Nova Consulta" com tom padronizado #15803d */
 .btn-nova-consulta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background-color: #0f766e;
+  background-color: #15803d;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -76,7 +76,7 @@
 }
 
 .btn-nova-consulta:hover {
-  background-color: #0d655f;
+  background-color: #166534;
 }
 
 .btn-nova-consulta:active {
@@ -419,7 +419,7 @@
   align-items: center;
   gap: 6px;
   background-color: #f1f5f9;
-  color: #0f766e;
+  color: #15803d;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 8px 16px;
