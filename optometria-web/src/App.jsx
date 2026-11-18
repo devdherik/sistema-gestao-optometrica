@@ -5,6 +5,8 @@ import ModalNovoPaciente from './components/ModalNovoPaciente';
 import { LayoutGrid, Users, ClipboardList } from 'lucide-react';
 import PacientesView from './components/PacientesView';
 import ProntuarioPacienteView from './components/ProntuarioPacienteView';
+import AtendimentosView from './components/AtendimentosView';
+import FichaAtendimentoView from './components/FichaAtendimentoView';
 
 function App() {
   // Estado que guarda qual aba está ativa no momento ('inicio', 'pacientes', 'atendimentos')
@@ -13,6 +15,8 @@ function App() {
   const [modalPacienteAberto, setModalPacienteAberto] = useState(false);
   const [pacienteEmEdicao, setPacienteEmEdicao] = useState(null);
   const [pacienteSelecionadoProntuario, setPacienteSelecionadoProntuario] = useState(null);
+  const [notificacaoProntuario, setNotificacaoProntuario] = useState(null);
+  const [pacienteEmAtendimento, setPacienteEmAtendimento] = useState(null);
   const [recarregarPacientesGatilho, setRecarregarPacientesGatilho] = useState(0);
 
   const handleAbrirNovoPaciente = () => {
@@ -44,7 +48,28 @@ function App() {
     if (novaAba !== 'pacientes') {
       setPacienteSelecionadoProntuario(null);
     }
+    // Ao trocar de aba, se sair de atendimentos, limpa paciente em atendimento
+    if (novaAba !== 'atendimentos') {
+      setPacienteEmAtendimento(null);
+    }
     setAbaAtiva(novaAba);
+  };
+
+  // Disparado ao clicar em "Nova Consulta" dentro do Prontuário ou na busca de Atendimentos
+  const handleIniciarAtendimento = (paciente) => {
+    setPacienteEmAtendimento(paciente);
+    setAbaAtiva('atendimentos');
+  };
+
+  const handleAtendimentoSalvo = (paciente, mensagem) => {
+    // Após salvar, leva direto para o Prontuário do paciente com a notificação padronizada
+    setPacienteEmAtendimento(null);
+    setPacienteSelecionadoProntuario(paciente);
+    setAbaAtiva('pacientes');
+    setNotificacaoProntuario({
+      tipo: 'sucesso',
+      texto: mensagem || 'Consulta optométrica registrada com sucesso!'
+    });
   };
 
   return (
@@ -83,17 +108,17 @@ function App() {
           </div>
         )}
 
+        {/* ABA: PACIENTES */}
         {abaAtiva === 'pacientes' && (
           pacienteSelecionadoProntuario ? (
             <ProntuarioPacienteView 
               paciente={pacienteSelecionadoProntuario}
               onVoltar={() => setPacienteSelecionadoProntuario(null)}
               onEditarCadastro={handleEditarPaciente}
-              onNovaConsulta={(p) => {
-                console.log('Iniciar nova consulta para:', p);
-                setAbaAtiva('atendimentos');
-              }}
+              onNovaConsulta={handleIniciarAtendimento}
               onPacienteExcluido={handlePacienteExcluido}
+              notificacaoExterna={notificacaoProntuario}
+              onLimparNotificacaoExterna={() => setNotificacaoProntuario(null)}
             />
           ) : (
             <PacientesView 
@@ -104,14 +129,21 @@ function App() {
           )
         )}
 
+        {/* ABA: ATENDIMENTOS */}
         {abaAtiva === 'atendimentos' && (
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ClipboardList size={24} />
-              <h2>Atendimentos e Consultas</h2>
-            </div>
-            <p>Histórico clínico, tabela refrativa OD/OE e emissão de receitas.</p>
-          </div>
+          pacienteEmAtendimento ? (
+            <FichaAtendimentoView 
+              paciente={pacienteEmAtendimento}
+              onVoltar={() => setPacienteEmAtendimento(null)}
+              onTrocarPaciente={() => setPacienteEmAtendimento(null)}
+              onAtendimentoSalvo={handleAtendimentoSalvo}
+            />
+          ) : (
+            <AtendimentosView 
+              onIniciarAtendimento={handleIniciarAtendimento}
+              onCadastrarNovoPaciente={handleAbrirNovoPaciente}
+            />
+          )
         )}
       </main>
     </div> 

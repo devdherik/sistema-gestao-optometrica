@@ -1,0 +1,288 @@
+.atendimentos-selecao-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Cabeçalho */
+.atendimentos-header {
+  margin-bottom: 24px;
+}
+
+.atendimentos-titulo {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.atendimentos-subtitulo {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Card Principal de Busca */
+.card-seletor-paciente {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+
+.seletor-instrucao {
+  margin-bottom: 20px;
+}
+
+.seletor-badge {
+  display: inline-block;
+  background-color: #f0fdf4;
+  color: #15803d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #bbf7d0;
+  margin-bottom: 10px;
+}
+
+.seletor-titulo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.seletor-descricao {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Campo de Busca Grande */
+.seletor-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 0 16px;
+  height: 52px;
+  transition: all 0.2s ease;
+}
+
+.seletor-input-wrapper:focus-within {
+  background-color: #ffffff;
+  border-color: #15803d;
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.14);
+}
+
+.seletor-busca-icone {
+  color: #64748b;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.seletor-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.seletor-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Lista de Resultados da Busca */
+.seletor-resultados-lista {
+  margin-top: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.paciente-resultado-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+  gap: 16px;
+}
+
+.paciente-resultado-item:last-child {
+  border-bottom: none;
+}
+
+.paciente-resultado-item:hover {
+  background-color: #f8fafc;
+}
+
+.paciente-resultado-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.paciente-resultado-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.paciente-resultado-nome {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.paciente-resultado-detalhe {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Botão Iniciar Consulta */
+.btn-iniciar-consulta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-iniciar-consulta:hover {
+  background-color: #166534;
+}
+
+.btn-iniciar-consulta:active {
+  transform: scale(0.98);
+}
+
+/* Estado de busca vazia */
+.seletor-resultado-vazio {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #fefce8;
+  border-radius: 8px;
+}
+
+.icone-alerta {
+  color: #ca8a04;
+  flex-shrink: 0;
+}
+
+.resultado-vazio-titulo {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #854d0e;
+}
+
+/* Rodapé do Seletor */
+.seletor-rodape {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.seletor-rodape-texto {
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+.btn-link-novo-paciente {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #15803d;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.btn-link-novo-paciente:hover {
+  color: #166534;
+  text-decoration: underline;
+}
+
+/* 3. Guia Rápido de 3 Passos */
+.atendimentos-guia-rapido {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .atendimentos-guia-rapido {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guia-item {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.guia-icone {
+  color: #15803d;
+  background-color: #f0fdf4;
+  padding: 6px;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.guia-item h5 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.guia-item p {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-top: 4px;
+  line-height: 1.4;
+}

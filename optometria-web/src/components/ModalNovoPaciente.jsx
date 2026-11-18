@@ -133,11 +133,25 @@ function ModalNovoPaciente({ aberto, onFechar, onPacienteSalvo, pacienteParaEdit
           </button>
         </div>
 
-        {/* Feedback de erro ou sucesso */}
+        {/* Feedback de erro ou sucesso padronizado */}
         {aviso && (
-          <div className={`modal-paciente-aviso ${aviso.tipo}`}>
-            {aviso.tipo === 'erro' ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
-            <span>{aviso.texto}</span>
+          <div style={{ padding: '16px 32px 0 32px' }}>
+            <div className={`alerta-sistema alerta-sistema-${aviso.tipo}`}>
+              {aviso.tipo === 'erro' ? (
+                <AlertCircle size={18} className="alerta-sistema-icone" />
+              ) : (
+                <CheckCircle2 size={18} className="alerta-sistema-icone" />
+              )}
+              <span className="alerta-sistema-texto">{aviso.texto}</span>
+              <button 
+                type="button" 
+                className="alerta-sistema-fechar" 
+                onClick={() => setAviso(null)}
+                title="Fechar notificação"
+              >
+                <X size={15} />
+              </button>
+            </div>
           </div>
         )}
 

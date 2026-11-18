@@ -114,6 +114,10 @@ function ModalOpticas({ aberto, onFechar }) {
             }
 
             await carregarOpticas();
+            setAviso({
+                tipo: 'sucesso',
+                texto: 'Ótica parceira excluída com sucesso!'
+            });
         } catch (erro) {
             setAviso({
                 tipo: 'erro',
@@ -206,17 +210,17 @@ function ModalOpticas({ aberto, onFechar }) {
               {idEditando ? 'Atualize os dados de contato e endereço.' : 'Dados para contato e encaminhamento.'}
             </p>
 
-            {/* BANNER DE ALERTA DO PRÓPRIO SISTEMA */}
+            {/* BANNER DE ALERTA PADRONIZADO */}
             {aviso && (
-              <div className={`modal-alert modal-alert-${aviso.tipo}`}>
+              <div className={`alerta-sistema alerta-sistema-${aviso.tipo}`} style={{ marginBottom: '16px' }}>
                 {aviso.tipo === 'sucesso' ? (
-                  <CheckCircle2 size={18} className="alert-icon" />
+                  <CheckCircle2 size={18} className="alerta-sistema-icone" />
                 ) : (
-                  <AlertCircle size={18} className="alert-icon" />
+                  <AlertCircle size={18} className="alerta-sistema-icone" />
                 )}
-                <span className="alert-text">{aviso.texto}</span>
-                <button type="button" className="btn-close-alert" onClick={() => setAviso(null)}>
-                  <X size={14} />
+                <span className="alerta-sistema-texto">{aviso.texto}</span>
+                <button type="button" className="alerta-sistema-fechar" onClick={() => setAviso(null)}>
+                  <X size={15} />
                 </button>
               </div>
             )}

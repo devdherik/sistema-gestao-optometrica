@@ -8,10 +8,11 @@ import {
   CheckCircle2, 
   FileText, 
   Clock, 
-  Calendar,
-  Phone,
-  User,
-  ShieldAlert
+  Calendar, 
+  Phone, 
+  User, 
+  ShieldAlert,
+  X
 } from 'lucide-react';
 import { pacienteService, atendimentoService } from '../services/api';
 import './ProntuarioPacienteView.css';
@@ -21,13 +22,34 @@ function ProntuarioPacienteView({
   onVoltar, 
   onEditarCadastro, 
   onNovaConsulta, 
-  onPacienteExcluido 
+  onPacienteExcluido,
+  notificacaoExterna,
+  onLimparNotificacaoExterna
 }) {
   const [atendimentos, setAtendimentos] = useState([]);
   const [carregandoAtendimentos, setCarregandoAtendimentos] = useState(true);
   const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
   const [excluindo, setExcluindo] = useState(false);
   const [aviso, setAviso] = useState(null); // { tipo: 'erro' | 'sucesso', texto: '' }
+
+  // Recebe notificação vinda de outra ação (ex: consulta recém-finalizada)
+  useEffect(() => {
+    if (notificacaoExterna) {
+      setAviso(notificacaoExterna);
+      if (onLimparNotificacaoExterna) {
+        onLimparNotificacaoExterna();
+      }
+    }
+  }, [notificacaoExterna, onLimparNotificacaoExterna]);
+
+  // Limpa o aviso automaticamente após 6 segundos
+  useEffect(() => {
+    if (!aviso) return;
+    const timer = setTimeout(() => {
+      setAviso(null);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [aviso]);
 
   // Carregar histórico de atendimentos do paciente
   useEffect(() => {
@@ -62,7 +84,7 @@ function ProntuarioPacienteView({
     try {
       await pacienteService.excluir(paciente.id);
       if (onPacienteExcluido) {
-        onPacienteExcluido();
+        onPacienteExcluido(paciente);
       }
       onVoltar();
     } catch (err) {
@@ -149,14 +171,25 @@ function ProntuarioPacienteView({
         </button>
       </div>
 
-      {/* Alerta de erro (ex: tentativa de excluir com consultas) */}
+      {/* Alerta padronizado do sistema */}
       {aviso && (
-        <div className={`prontuario-alerta ${aviso.tipo}`}>
-          {aviso.tipo === 'erro' ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
-          <span>{aviso.texto}</span>
-          <button type="button" className="btn-fechar-alerta" onClick={() => setAviso(null)}>
-            ×
-          </button>
+        <div style={{ marginBottom: '20px' }}>
+          <div className={`alerta-sistema alerta-sistema-${aviso.tipo}`}>
+            {aviso.tipo === 'erro' ? (
+              <AlertCircle size={18} className="alerta-sistema-icone" />
+            ) : (
+              <CheckCircle2 size={18} className="alerta-sistema-icone" />
+            )}
+            <span className="alerta-sistema-texto">{aviso.texto}</span>
+            <button 
+              type="button" 
+              className="alerta-sistema-fechar" 
+              onClick={() => setAviso(null)}
+              title="Fechar notificação"
+            >
+              <X size={15} />
+            </button>
+          </div>
         </div>
       )}
 
