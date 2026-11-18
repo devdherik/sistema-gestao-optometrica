@@ -16,6 +16,7 @@ function App() {
   const [pacienteEmEdicao, setPacienteEmEdicao] = useState(null);
   const [pacienteSelecionadoProntuario, setPacienteSelecionadoProntuario] = useState(null);
   const [notificacaoProntuario, setNotificacaoProntuario] = useState(null);
+  const [notificacaoPacientesLista, setNotificacaoPacientesLista] = useState(null);
   const [pacienteEmAtendimento, setPacienteEmAtendimento] = useState(null);
   const [recarregarPacientesGatilho, setRecarregarPacientesGatilho] = useState(0);
 
@@ -38,9 +39,15 @@ function App() {
     }
   };
 
-  const handlePacienteExcluido = () => {
+  const handlePacienteExcluido = (paciente) => {
     setPacienteSelecionadoProntuario(null);
     setRecarregarPacientesGatilho((antigo) => antigo + 1);
+    setNotificacaoPacientesLista({
+      tipo: 'sucesso',
+      texto: paciente?.nomeCompleto 
+        ? `Paciente "${paciente.nomeCompleto}" excluído com sucesso!`
+        : 'Paciente excluído com sucesso!'
+    });
   };
 
   const handleTrocarAba = (novaAba) => {
@@ -125,6 +132,8 @@ function App() {
               onNovoPaciente={handleAbrirNovoPaciente}
               onVerProntuario={(paciente) => setPacienteSelecionadoProntuario(paciente)}
               recarregarGatilho={recarregarPacientesGatilho}
+              notificacaoExterna={notificacaoPacientesLista}
+              onLimparNotificacaoExterna={() => setNotificacaoPacientesLista(null)}
             />
           )
         )}

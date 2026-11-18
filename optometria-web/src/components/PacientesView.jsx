@@ -7,16 +7,46 @@ import {
   Loader2, 
   Inbox, 
   ChevronLeft, 
-  ChevronRight 
+  ChevronRight,
+  AlertCircle,
+  CheckCircle2,
+  X
 } from 'lucide-react';
 import { pacienteService } from '../services/api';
 import './PacientesView.css';
 
-function PacientesView({ onNovoPaciente, onEditarPaciente, onVerProntuario, recarregarGatilho = 0 }) {
+function PacientesView({ 
+  onNovoPaciente, 
+  onEditarPaciente, 
+  onVerProntuario, 
+  recarregarGatilho = 0,
+  notificacaoExterna,
+  onLimparNotificacaoExterna
+}) {
   // Dados do backend
   const [pacientes, setPacientes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
+  const [aviso, setAviso] = useState(null);
+
+  // Recebe notificação vinda de exclusão ou ações externas
+  useEffect(() => {
+    if (notificacaoExterna) {
+      setAviso(notificacaoExterna);
+      if (onLimparNotificacaoExterna) {
+        onLimparNotificacaoExterna();
+      }
+    }
+  }, [notificacaoExterna, onLimparNotificacaoExterna]);
+
+  // Limpa o aviso automaticamente após 6 segundos
+  useEffect(() => {
+    if (!aviso) return;
+    const timer = setTimeout(() => {
+      setAviso(null);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [aviso]);
 
   // Filtros da barra
   const [busca, setBusca] = useState('');
@@ -124,6 +154,28 @@ function PacientesView({ onNovoPaciente, onEditarPaciente, onVerProntuario, reca
           <span>Novo paciente</span>
         </button>
       </div>
+
+      {/* Alerta de Feedback Padronizado (ex: Paciente excluído) */}
+      {aviso && (
+        <div style={{ marginBottom: '20px' }}>
+          <div className={`alerta-sistema alerta-sistema-${aviso.tipo}`}>
+            {aviso.tipo === 'erro' ? (
+              <AlertCircle size={18} className="alerta-sistema-icone" />
+            ) : (
+              <CheckCircle2 size={18} className="alerta-sistema-icone" />
+            )}
+            <span className="alerta-sistema-texto">{aviso.texto}</span>
+            <button 
+              type="button" 
+              className="alerta-sistema-fechar" 
+              onClick={() => setAviso(null)}
+              title="Fechar notificação"
+            >
+              <X size={15} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 3. Barra de Busca e Filtros (Enxuta) */}
       <form onSubmit={handlePesquisar} className="pacientes-filtros-bar">
