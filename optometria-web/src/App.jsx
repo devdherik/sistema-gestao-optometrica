@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Navbar from './components/Navbar';
 import ModalOpticas from './components/ModalOpticas';
 import ModalNovoPaciente from './components/ModalNovoPaciente';
+import ModalReceitaOptometrica from './components/ModalReceitaOptometrica';
 import { LayoutGrid, Users, ClipboardList } from 'lucide-react';
 import PacientesView from './components/PacientesView';
 import ProntuarioPacienteView from './components/ProntuarioPacienteView';
@@ -19,6 +20,9 @@ function App() {
   const [notificacaoPacientesLista, setNotificacaoPacientesLista] = useState(null);
   const [pacienteEmAtendimento, setPacienteEmAtendimento] = useState(null);
   const [recarregarPacientesGatilho, setRecarregarPacientesGatilho] = useState(0);
+
+  // Estado para impressão da receita médica
+  const [receitaParaImprimir, setReceitaParaImprimir] = useState(null); // { atendimento, paciente }
 
   const handleAbrirNovoPaciente = () => {
     setPacienteEmEdicao(null);
@@ -104,6 +108,14 @@ function App() {
         onPacienteSalvo={handlePacienteSalvo}
       />
 
+      {/* Modal de Impressão / Pré-visualização da Receita */}
+      <ModalReceitaOptometrica 
+        aberto={Boolean(receitaParaImprimir)}
+        onFechar={() => setReceitaParaImprimir(null)}
+        atendimento={receitaParaImprimir?.atendimento}
+        paciente={receitaParaImprimir?.paciente}
+      />
+
       <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
         {abaAtiva === 'inicio' && (
           <div>
@@ -126,6 +138,7 @@ function App() {
               onPacienteExcluido={handlePacienteExcluido}
               notificacaoExterna={notificacaoProntuario}
               onLimparNotificacaoExterna={() => setNotificacaoProntuario(null)}
+              onImprimirReceita={(atendimento, paciente) => setReceitaParaImprimir({ atendimento, paciente })}
             />
           ) : (
             <PacientesView 

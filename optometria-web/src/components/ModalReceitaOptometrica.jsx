@@ -5,27 +5,44 @@ import './ModalReceitaOptometrica.css';
 function ModalReceitaOptometrica({ aberto, onFechar, atendimento, paciente }) {
   if (!aberto || !atendimento || !paciente) return null;
 
-  // Formatação de data padrão BR
+  // Formatação de data padrão BR (DD/MM/AAAA)
   const formatarData = (dataIso) => {
     if (!dataIso) return '-';
-    const partes = dataIso.split('T')[0].split('-');
-    if (partes.length === 3) {
-      return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    try {
+      const partes = dataIso.split('T')[0].split('-');
+      if (partes.length === 3) {
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      }
+      return dataIso;
+    } catch {
+      return dataIso;
     }
-    return dataIso;
   };
 
-  // Cálculo da idade
+  // Cálculo da idade a partir da Data de Nascimento
   const calcularIdade = (dataNasc) => {
     if (!dataNasc) return null;
-    const nasc = new Date(dataNasc);
-    const hoje = new Date();
-    let idade = hoje.getFullYear() - nasc.getFullYear();
-    const m = hoje.getMonth() - nasc.getMonth();
-    if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
-      idade--;
+    try {
+      const nasc = new Date(dataNasc + 'T12:00:00');
+      const hoje = new Date();
+      let idade = hoje.getFullYear() - nasc.getFullYear();
+      const m = hoje.getMonth() - nasc.getMonth();
+      if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
+        idade--;
+      }
+      return idade >= 0 ? `${idade} anos` : null;
+    } catch {
+      return null;
     }
-    return idade >= 0 ? `${idade} anos` : null;
+  };
+
+  // Formatação de dioptrias (+/- com 2 decimais ou número de eixo)
+  const formatarGrau = (num, ehEixo = false) => {
+    if (num === null || num === undefined || num === '') return '—';
+    const n = Number(num);
+    if (isNaN(n)) return '—';
+    if (ehEixo) return `${n}°`;
+    return n > 0 ? `+${n.toFixed(2)}` : n.toFixed(2);
   };
 
   const handleImprimir = () => {
@@ -33,6 +50,10 @@ function ModalReceitaOptometrica({ aberto, onFechar, atendimento, paciente }) {
   };
 
   const idadeTexto = calcularIdade(paciente.dataNascimento);
+
+  // Extrai olhoDireito e olhoEsquerdo do objeto do atendimento
+  const od = atendimento.olhoDireito || {};
+  const oe = atendimento.olhoEsquerdo || {};
 
   return (
     <div className="receita-modal-overlay">
@@ -71,7 +92,7 @@ function ModalReceitaOptometrica({ aberto, onFechar, atendimento, paciente }) {
           <div className="receita-cabecalho">
             <div className="receita-logo-marca">
               <div className="receita-logo-icone">
-                <Eye size={28} />
+                <Eye size={26} />
               </div>
               <div className="receita-logo-texto">
                 <h1>CONSULTÓRIO DE OPTOMETRIA</h1>
@@ -80,7 +101,9 @@ function ModalReceitaOptometrica({ aberto, onFechar, atendimento, paciente }) {
             </div>
             <div className="receita-tipo-documento">
               <h2>PRESCRIÇÃO ÓPTICA</h2>
-              <span className="receita-numero-atendimento">Ref. PAC-{paciente.id ? paciente.id.toString().padStart(5, '0') : '00000'}</span>
+              <span className="receita-numero-atendimento">
+                Ref. PAC-{paciente.id ? String(paciente.id).padStart(5, '0') : '00000'}
+              </span>
             </div>
           </div>
 
@@ -112,7 +135,7 @@ function ModalReceitaOptometrica({ aberto, onFechar, atendimento, paciente }) {
             </div>
           </div>
 
-          {/* Tabela de Refração */}
+          {/* Tabela de Refração - Mesma sequência exata da tela de atendimento */}
           <div className="receita-refracao-bloco">
             <table className="receita-tabela">
               <thead>
@@ -121,41 +144,41 @@ function ModalReceitaOptometrica({ aberto, onFechar, atendimento, paciente }) {
                   <th>ESFÉRICO</th>
                   <th>CILÍNDRICO</th>
                   <th>EIXO</th>
+                  <th>AV LONGE</th>
+                  <th>AV PERTO</th>
+                  <th>ADIÇÃO</th>
                   <th>DNP</th>
-                  <th>AD / PERTO</th>
-                  <th>ACUIDADE</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td className="td-olho">OD (Direito)</td>
-                  <td className="td-valor">{atendimento.esfericoOd || '-'}</td>
-                  <td className="td-valor">{atendimento.cilindricoOd || '-'}</td>
-                  <td className="td-valor">{atendimento.eixoOd ? `${atendimento.eixoOd}°` : '-'}</td>
-                  <td className="td-valor">{atendimento.dnpOd ? `${atendimento.dnpOd} mm` : '-'}</td>
-                  <td className="td-valor" rowSpan={atendimento.adicao ? 2 : 1}>
-                    {atendimento.adicao || '-'}
-                  </td>
-                  <td className="td-valor">{atendimento.acuidadeVisualOd || '-'}</td>
+                  <td className="td-valor">{formatarGrau(od.esferico)}</td>
+                  <td className="td-valor">{formatarGrau(od.cilindrico)}</td>
+                  <td className="td-valor">{formatarGrau(od.eixo, true)}</td>
+                  <td className="td-valor">{od.avLonge || '—'}</td>
+                  <td className="td-valor">{od.avPerto || '—'}</td>
+                  <td className="td-valor">{od.adicao ? formatarGrau(od.adicao) : '—'}</td>
+                  <td className="td-valor">{od.dnp ? `${od.dnp} mm` : '—'}</td>
                 </tr>
                 <tr>
                   <td className="td-olho">OE (Esquerdo)</td>
-                  <td className="td-valor">{atendimento.esfericoOe || '-'}</td>
-                  <td className="td-valor">{atendimento.cilindricoOe || '-'}</td>
-                  <td className="td-valor">{atendimento.eixoOe ? `${atendimento.eixoOe}°` : '-'}</td>
-                  <td className="td-valor">{atendimento.dnpOe ? `${atendimento.dnpOe} mm` : '-'}</td>
-                  {/* Se não tem adição, mantém célula normal */}
-                  {!atendimento.adicao && <td className="td-valor">-</td>}
-                  <td className="td-valor">{atendimento.acuidadeVisualOe || '-'}</td>
+                  <td className="td-valor">{formatarGrau(oe.esferico)}</td>
+                  <td className="td-valor">{formatarGrau(oe.cilindrico)}</td>
+                  <td className="td-valor">{formatarGrau(oe.eixo, true)}</td>
+                  <td className="td-valor">{oe.avLonge || '—'}</td>
+                  <td className="td-valor">{oe.avPerto || '—'}</td>
+                  <td className="td-valor">{oe.adicao ? formatarGrau(oe.adicao) : '—'}</td>
+                  <td className="td-valor">{oe.dnp ? `${oe.dnp} mm` : '—'}</td>
                 </tr>
               </tbody>
             </table>
 
             {/* DP Total ou Observação de sem correção */}
             <div className="receita-dp-rodape">
-              {atendimento.semNecessidadeCorrecao ? (
+              {atendimento.semNecessidadeNovaCorrecao ? (
                 <span className="receita-aviso-sem-correcao">
-                  * Paciente em emetropia / sem necessidade de correção dióptrica no momento.
+                  * Paciente em emetropia / sem necessidade de nova correção visual.
                 </span>
               ) : (
                 atendimento.distanciaPupilar && (

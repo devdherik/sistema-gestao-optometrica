@@ -1,0 +1,459 @@
+/* Modal de Pré-visualização da Receita */
+.receita-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.receita-modal-container {
+  background-color: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 800px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Barra de ações (header do modal) */
+.receita-modal-header-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.receita-modal-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.receita-icone-titulo {
+  color: #15803d;
+}
+
+.receita-modal-botoes {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-receita-imprimir {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-receita-imprimir:hover {
+  background-color: #166534;
+}
+
+.btn-receita-fechar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 6px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-receita-fechar:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+
+/* Folha de Papel (Estilo A4) */
+.receita-folha-papel {
+  background-color: #ffffff;
+  margin: 1.5rem;
+  padding: 2.25rem 2.5rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  font-family: inherit;
+  color: #1e293b;
+}
+
+/* Cabeçalho da Clínica */
+.receita-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.receita-logo-marca {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.receita-logo-icone {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: #f0fdf4;
+  color: #15803d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bbf7d0;
+}
+
+.receita-logo-texto h1 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.receita-logo-texto p {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0.15rem 0 0 0;
+}
+
+.receita-tipo-documento {
+  text-align: right;
+}
+
+.receita-tipo-documento h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #15803d;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.receita-numero-atendimento {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 0.2rem;
+  font-family: monospace;
+}
+
+.receita-divisor {
+  height: 2px;
+  background: linear-gradient(to right, #15803d, #86efac, #e2e8f0);
+  margin: 1.25rem 0;
+}
+
+/* Bloco do Paciente */
+.receita-paciente-bloco {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.85rem 1.15rem;
+  margin-bottom: 1.25rem;
+}
+
+.receita-paciente-linha {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.receita-paciente-sublinha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.receita-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.03em;
+}
+
+.receita-valor-destaque {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.receita-valor {
+  color: #1e293b;
+  font-weight: 500;
+  margin-left: 0.35rem;
+}
+
+/* Tabela de Refração */
+.receita-refracao-bloco {
+  margin-bottom: 1.25rem;
+}
+
+.receita-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.receita-tabela th {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0.4rem;
+  border: 1px solid #cbd5e1;
+  text-align: center;
+}
+
+.receita-tabela .th-olho {
+  text-align: left;
+  width: 110px;
+  padding-left: 0.6rem;
+}
+
+.receita-tabela td {
+  padding: 0.6rem 0.4rem;
+  border: 1px solid #cbd5e1;
+  text-align: center;
+}
+
+.receita-tabela .td-olho {
+  text-align: left;
+  font-weight: 700;
+  color: #0f172a;
+  background-color: #f8fafc;
+  padding-left: 0.6rem;
+}
+
+.receita-tabela .td-valor {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 0.88rem;
+}
+
+.receita-dp-rodape {
+  margin-top: 0.6rem;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.receita-aviso-sem-correcao {
+  color: #b45309;
+  font-style: italic;
+  font-size: 0.82rem;
+}
+
+/* Seções de Indicações / Observações */
+.receita-subtitulo {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 0.4rem 0;
+}
+
+.receita-secao-indicacoes {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.receita-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.receita-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.receita-secao-obs {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.receita-texto-obs {
+  font-size: 0.82rem;
+  color: #334155;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.receita-texto-retorno {
+  font-size: 0.82rem;
+  color: #15803d;
+  margin: 0.4rem 0 0 0;
+}
+
+/* Rodapé com Assinatura */
+.receita-rodape-assinatura {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.receita-data-emissao {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.receita-bloco-carimbo {
+  text-align: center;
+  min-width: 240px;
+}
+
+.receita-linha-assinatura {
+  border-top: 1px solid #64748b;
+  margin-bottom: 0.4rem;
+}
+
+.receita-nome-profissional {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.receita-registro-profissional {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin: 0.1rem 0 0 0;
+}
+
+/* =========================================
+   REGRAS DE IMPRESSÃO (@media print)
+   ========================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 1cm;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+
+  /* Oculta tudo que não faz parte do modal de receita */
+  body > * {
+    display: none !important;
+  }
+
+  /* Exibe somente o overlay e o container */
+  .receita-modal-overlay {
+    position: static !important;
+    display: block !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    inset: auto !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  .receita-modal-container {
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Oculta botões e barras de controle */
+  .noprint,
+  .receita-modal-header-acoes {
+    display: none !important;
+  }
+
+  /* Configuração da folha para encaixe perfeito em 1 única página */
+  .receita-folha-papel {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Força a impressão exata de cores de fundo de badges e linhas no Chrome/Edge/Firefox */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .receita-cabecalho {
+    page-break-inside: avoid;
+  }
+
+  .receita-paciente-bloco {
+    page-break-inside: avoid;
+    background-color: #f8fafc !important;
+  }
+
+  .receita-tabela th {
+    background-color: #f1f5f9 !important;
+  }
+
+  .receita-tabela .td-olho {
+    background-color: #f8fafc !important;
+  }
+
+  .receita-rodape-assinatura {
+    page-break-inside: avoid;
+    margin-top: 2.5rem;
+  }
+}
