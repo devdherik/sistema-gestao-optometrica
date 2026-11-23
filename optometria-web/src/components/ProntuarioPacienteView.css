@@ -58,7 +58,7 @@
   margin-top: 4px;
 }
 
-/* Botão Verde "+ Nova Consulta" com tom padronizado #15803d */
+/* Botão Verde "+ Nova Consulta" */
 .btn-nova-consulta {
   display: inline-flex;
   align-items: center;
@@ -81,39 +81,6 @@
 
 .btn-nova-consulta:active {
   transform: scale(0.98);
-}
-
-/* Alertas de Feedback */
-.prontuario-alerta {
-  margin-bottom: 16px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.prontuario-alerta.erro {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
-}
-
-.prontuario-alerta.sucesso {
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #166534;
-}
-
-.btn-fechar-alerta {
-  margin-left: auto;
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: inherit;
 }
 
 /* Faixa de Resumo do Paciente */
@@ -149,7 +116,7 @@
   align-items: start;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 992px) {
   .prontuario-grid {
     grid-template-columns: 1fr;
   }
@@ -167,6 +134,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: sticky;
+  top: 90px;
 }
 
 .avatar-prontuario-wrapper {
@@ -295,7 +264,7 @@
   background-color: #fef2f2;
 }
 
-/* Caixa de confirmação de exclusão (idêntica ao modal de óticas) */
+/* Caixa de confirmação de exclusão */
 .exclusao-confirmacao-box {
   background-color: #fff1f2;
   border: 1px solid #fecdd3;
@@ -435,11 +404,335 @@
   border-color: #0284c7;
 }
 
-.historico-lista-placeholder {
-  padding: 24px;
-  background-color: #f8fafc;
-  border-radius: 8px;
+/* ==========================================================================
+   LINHA DO TEMPO DAS CONSULTAS (TIMELINE)
+   ========================================================================== */
+.timeline-consultas {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+
+/* Marcador da Linha do Tempo */
+.timeline-marcador-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.timeline-marcador {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
   color: #64748b;
-  font-size: 0.9rem;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.timeline-marcador.ativo {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border-color: #15803d;
+}
+
+.timeline-linha {
+  width: 2px;
+  flex: 1;
+  background-color: #e2e8f0;
+  margin-top: 6px;
+  margin-bottom: -16px;
+}
+
+/* Card Individual de Consulta */
+.timeline-card-consulta {
+  flex: 1;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Topo do Card */
+.consulta-card-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 14px;
+}
+
+.consulta-data-grupo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.consulta-data-texto {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.badge-consulta-atual {
+  background-color: #f0fdf4;
+  color: #15803d;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid #bbf7d0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.consulta-subinfo {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-top: 3px;
+}
+
+.consulta-origem-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.consulta-origem-badge .nome-optica {
+  color: #0284c7;
+}
+
+/* Queixa */
+.consulta-secao {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.consulta-secao-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.consulta-queixa-texto {
+  font-size: 0.92rem;
+  color: #1e293b;
+  line-height: 1.45;
+}
+
+/* Aviso de Sem Correção */
+.aviso-sem-correcao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  color: #166534;
+  font-weight: 500;
+}
+
+/* Tabela de Comparação Refrativa */
+.consulta-refrativa-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tabela-comparacao {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tabela-comparacao thead tr {
+  background-color: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tabela-comparacao th {
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.th-comp-olho {
+  width: 50px;
   text-align: center;
+}
+
+.th-comp-sub {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.tabela-comparacao tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tabela-comparacao tbody tr:last-child {
+  border-bottom: none;
+}
+
+.td-comp-olho {
+  font-weight: 700;
+  color: #0f172a;
+  text-align: center;
+  padding: 12px 8px;
+  background-color: #f1f5f9;
+  border-right: 1px solid #e2e8f0;
+}
+
+.td-comp-valores {
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
+.td-comp-valores.anterior {
+  color: #64748b;
+  border-right: 1px solid #e2e8f0;
+}
+
+.formula-refrativa {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.formula-refrativa strong {
+  color: #15803d; /* Verde de destaque do grau atual */
+}
+
+.adicao-destaque {
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+/* Medições Extras: DNP, DP, AV */
+.consulta-medicoes-extras {
+  padding: 10px 14px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.consulta-medicoes-extras strong {
+  color: #0f172a;
+}
+
+/* Tags de Lentes e Tratamentos */
+.consulta-tags-grupo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-prescricao {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.tag-lente {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.tag-tratamento {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+/* Retorno e Obs */
+.consulta-retorno-obs {
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.45;
+  background-color: #f8fafc;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.consulta-retorno-obs strong {
+  color: #0f172a;
+}
+
+/* Rodapé de Ações */
+.consulta-acoes-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.btn-acao-imprimir-receita {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.btn-acao-imprimir-receita:hover {
+  background-color: #166534;
+}
+
+.btn-acao-imprimir-receita:active {
+  transform: scale(0.98);
 }

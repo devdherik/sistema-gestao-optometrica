@@ -12,7 +12,12 @@ import {
   Phone, 
   User, 
   ShieldAlert,
-  X
+  X,
+  Store,
+  Printer,
+  Eye,
+  Check,
+  ChevronRight
 } from 'lucide-react';
 import { pacienteService, atendimentoService } from '../services/api';
 import './ProntuarioPacienteView.css';
@@ -24,7 +29,8 @@ function ProntuarioPacienteView({
   onNovaConsulta, 
   onPacienteExcluido,
   notificacaoExterna,
-  onLimparNotificacaoExterna
+  onLimparNotificacaoExterna,
+  onImprimirReceita
 }) {
   const [atendimentos, setAtendimentos] = useState([]);
   const [carregandoAtendimentos, setCarregandoAtendimentos] = useState(true);
@@ -109,7 +115,7 @@ function ProntuarioPacienteView({
   const calcularIdade = (dataNasc) => {
     if (!dataNasc) return null;
     try {
-      const nasc = new Date(dataNasc);
+      const nasc = new Date(dataNasc + 'T12:00:00');
       const hoje = new Date();
       let idade = hoje.getFullYear() - nasc.getFullYear();
       const m = hoje.getMonth() - nasc.getMonth();
@@ -134,6 +140,43 @@ function ProntuarioPacienteView({
     } catch {
       return dataStr;
     }
+  };
+
+  // Formata data por extenso: "20 de outubro de 2026"
+  const formatarDataExtenso = (dataStr) => {
+    if (!dataStr) return 'Data não informada';
+    try {
+      const d = new Date(dataStr);
+      return new Intl.DateTimeFormat('pt-BR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }).format(d);
+    } catch {
+      return formatarData(dataStr);
+    }
+  };
+
+  // Formata hora: "10:30"
+  const formatarHora = (dataStr) => {
+    if (!dataStr) return '';
+    try {
+      const d = new Date(dataStr);
+      const h = String(d.getHours()).padStart(2, '0');
+      const m = String(d.getMinutes()).padStart(2, '0');
+      return `${h}:${m}`;
+    } catch {
+      return '';
+    }
+  };
+
+  // Formata dioptrias com sinal: "-1.25", "+1.75", "Plano"
+  const formatarGrau = (num, ehEixo = false) => {
+    if (num === null || num === undefined || num === '') return '—';
+    const n = Number(num);
+    if (isNaN(n)) return '—';
+    if (ehEixo) return `${n}°`;
+    return n > 0 ? `+${n.toFixed(2)}` : n.toFixed(2);
   };
 
   if (!paciente) return null;
@@ -302,7 +345,7 @@ function ProntuarioPacienteView({
           </div>
         </aside>
 
-        {/* COLUNA DIREITA: Histórico de Consultas */}
+        {/* COLUNA DIREITA: Histórico de Consultas com Linha do Tempo */}
         <section className="prontuario-card-historico">
           <div className="historico-header">
             <h3 className="historico-titulo">Histórico de consultas</h3>
@@ -332,8 +375,210 @@ function ProntuarioPacienteView({
               </button>
             </div>
           ) : (
-            <div className="historico-lista-placeholder">
-              <p>Aqui renderizaremos as consultas em linha do tempo quando construirmos o módulo de Atendimento.</p>
+            <div className="timeline-consultas">
+              {atendimentos.map((atendimento, index) => {
+                const ehMaisRecente = index === 0;
+                const anterior = atendimentos[index + 1] || null;
+
+                return (
+                  <div key={atendimento.id} className="timeline-item">
+                    {/* Marcador da Linha do Tempo */}
+                    <div className="timeline-marcador-col">
+                      <div className={`timeline-marcador ${ehMaisRecente ? 'ativo' : ''}`}>
+                        {ehMaisRecente ? <Check size={14} /> : <Clock size={13} />}
+                      </div>
+                      {index < atendimentos.length - 1 && <div className="timeline-linha" />}
+                    </div>
+
+                    {/* Conteúdo da Consulta */}
+                    <div className="timeline-card-consulta">
+                      
+                      {/* Topo do Card da Consulta */}
+                      <div className="consulta-card-topo">
+                        <div>
+                          <div className="consulta-data-grupo">
+                            <h4 className="consulta-data-texto">
+                              {formatarDataExtenso(atendimento.dataAtendimento)}
+                            </h4>
+                            {ehMaisRecente && (
+                              <span className="badge-consulta-atual">Atual</span>
+                            )}
+                          </div>
+                          <p className="consulta-subinfo">
+                            {formatarHora(atendimento.dataAtendimento) && `${formatarHora(atendimento.dataAtendimento)} • `}
+                            {ehMaisRecente ? 'Consulta de acompanhamento' : 'Consulta anterior'}
+                          </p>
+                        </div>
+
+                        {/* Ótica de Origem */}
+                        <div className="consulta-origem-badge">
+                          <Store size={14} />
+                          <span>Ótica de origem:</span>
+                          <strong className="nome-optica">{atendimento.nomeOptica || 'Particular'}</strong>
+                        </div>
+                      </div>
+
+                      {/* Queixa Principal */}
+                      {atendimento.queixaPrincipal && (
+                        <div className="consulta-secao">
+                          <span className="consulta-secao-label">Queixa principal e sintomas</span>
+                          <p className="consulta-queixa-texto">{atendimento.queixaPrincipal}</p>
+                        </div>
+                      )}
+
+                      {/* Flag: Sem necessidade de nova correção visual */}
+                      {atendimento.semNecessidadeNovaCorrecao ? (
+                        <div className="aviso-sem-correcao">
+                          <CheckCircle2 size={16} />
+                          <span>Paciente avaliado sem necessidade de nova correção visual nesta consulta.</span>
+                        </div>
+                      ) : (
+                        /* Tabela de Comparação Refrativa OD / OE */
+                        <div className="consulta-refrativa-box">
+                          <table className="tabela-comparacao">
+                            <thead>
+                              <tr>
+                                <th className="th-comp-olho">Olho</th>
+                                {anterior && (
+                                  <th className="th-comp-col">
+                                    Anterior • {formatarData(anterior.dataAtendimento)}
+                                    <span className="th-comp-sub">Esférico / Cilíndrico × Eixo • Adição</span>
+                                  </th>
+                                )}
+                                <th className="th-comp-col">
+                                  {anterior ? 'Atual' : 'Prescrição'} • {formatarData(atendimento.dataAtendimento)}
+                                  <span className="th-comp-sub">Esférico / Cilíndrico × Eixo • Adição</span>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {/* Olho Direito */}
+                              <tr>
+                                <td className="td-comp-olho">OD</td>
+                                {anterior && (
+                                  <td className="td-comp-valores anterior">
+                                    <div className="formula-refrativa">
+                                      <span>
+                                        {formatarGrau(anterior.olhoDireito?.esferico)} / {formatarGrau(anterior.olhoDireito?.cilindrico)} × {formatarGrau(anterior.olhoDireito?.eixo, true)}
+                                      </span>
+                                      {anterior.olhoDireito?.adicao && (
+                                        <span className="adicao-destaque">
+                                          Adição {formatarGrau(anterior.olhoDireito?.adicao)}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </td>
+                                )}
+                                <td className="td-comp-valores atual">
+                                  <div className="formula-refrativa">
+                                    <strong>
+                                      {formatarGrau(atendimento.olhoDireito?.esferico)} / {formatarGrau(atendimento.olhoDireito?.cilindrico)} × {formatarGrau(atendimento.olhoDireito?.eixo, true)}
+                                    </strong>
+                                    {atendimento.olhoDireito?.adicao && (
+                                      <span className="adicao-destaque">
+                                        Adição {formatarGrau(atendimento.olhoDireito?.adicao)}
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+
+                              {/* Olho Esquerdo */}
+                              <tr>
+                                <td className="td-comp-olho">OE</td>
+                                {anterior && (
+                                  <td className="td-comp-valores anterior">
+                                    <div className="formula-refrativa">
+                                      <span>
+                                        {formatarGrau(anterior.olhoEsquerdo?.esferico)} / {formatarGrau(anterior.olhoEsquerdo?.cilindrico)} × {formatarGrau(anterior.olhoEsquerdo?.eixo, true)}
+                                      </span>
+                                      {anterior.olhoEsquerdo?.adicao && (
+                                        <span className="adicao-destaque">
+                                          Adição {formatarGrau(anterior.olhoEsquerdo?.adicao)}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </td>
+                                )}
+                                <td className="td-comp-valores atual">
+                                  <div className="formula-refrativa">
+                                    <strong>
+                                      {formatarGrau(atendimento.olhoEsquerdo?.esferico)} / {formatarGrau(atendimento.olhoEsquerdo?.cilindrico)} × {formatarGrau(atendimento.olhoEsquerdo?.eixo, true)}
+                                    </strong>
+                                    {atendimento.olhoEsquerdo?.adicao && (
+                                      <span className="adicao-destaque">
+                                        Adição {formatarGrau(atendimento.olhoEsquerdo?.adicao)}
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          {/* Medições Complementares: DNP, DP, AV */}
+                          <div className="consulta-medicoes-extras">
+                            {atendimento.olhoDireito?.dnp && (
+                              <span>DNP OD: <strong>{atendimento.olhoDireito.dnp} mm</strong></span>
+                            )}
+                            {atendimento.olhoEsquerdo?.dnp && (
+                              <span>DNP OE: <strong>{atendimento.olhoEsquerdo.dnp} mm</strong></span>
+                            )}
+                            {atendimento.distanciaPupilar && (
+                              <span>DP total: <strong>{atendimento.distanciaPupilar} mm</strong></span>
+                            )}
+                            {atendimento.olhoDireito?.avLonge && (
+                              <span>AV: <strong>{atendimento.olhoDireito.avLonge} longe</strong> • <strong>{atendimento.olhoDireito.avPerto || 'J1'} perto</strong></span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Lentes e Tratamentos Indicados */}
+                      {((atendimento.lentes && atendimento.lentes.length > 0) || 
+                        (atendimento.tratamentos && atendimento.tratamentos.length > 0)) && (
+                        <div className="consulta-tags-grupo">
+                          {atendimento.lentes && atendimento.lentes.map((lente) => (
+                            <span key={lente} className="tag-prescricao tag-lente">
+                              <Check size={13} />
+                              <span>{lente}</span>
+                            </span>
+                          ))}
+                          {atendimento.tratamentos && atendimento.tratamentos.map((trat) => (
+                            <span key={trat} className="tag-prescricao tag-tratamento">
+                              <Check size={13} />
+                              <span>{trat}</span>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Retorno e Observações Clínicas */}
+                      {(atendimento.dataSugeridaRetorno || atendimento.observacoesAtendimento) && (
+                        <p className="consulta-retorno-obs">
+                          {atendimento.dataSugeridaRetorno && (
+                            <strong>Retorno sugerido em {formatarData(atendimento.dataSugeridaRetorno)}. </strong>
+                          )}
+                          {atendimento.observacoesAtendimento}
+                        </p>
+                      )}
+
+                      {/* Botões de Ação da Consulta */}
+                      <div className="consulta-acoes-rodape">
+                        <button 
+                          type="button" 
+                          className="btn-acao-imprimir-receita"
+                          onClick={() => onImprimirReceita && onImprimirReceita(atendimento, paciente)}
+                        >
+                          <Printer size={16} />
+                          <span>Imprimir Receita</span>
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </section>
