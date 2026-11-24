@@ -1,20 +1,59 @@
 ﻿
 # Sistema de Gestão Optométrica
 
+> **Status do Projeto:**  **MVP Finalizado (v1.0)** — Todos os 19 requisitos funcionais implementados e validados.
+
 ## Visão geral
 
-Sistema web voltado para a rotina de atendimento optométrico. Permite cadastrar pacientes, registrar consultas clínicas com medições refrativas (OD/OE) e vincular atendimentos a óticas parceiras.
+Sistema web completo voltado para a rotina clínica do profissional de optometria. Informatiza o fluxo de ponta a ponta: cadastro de pacientes, busca rápida, prontuário individualizado com código formatado e idade dinâmica, registro de consultas clínicas com medições refrativas (OD/OE), linha do tempo do histórico de atendimentos, vínculo opcional com óticas parceiras e emissão de prescrição óptica formatada em folha A4 pronta para impressão.
+
+## Funcionalidades do MVP
+
+- **Gestão de Pacientes e Prontuário:**
+  - Cadastro e edição com máscara automática para telefone/WhatsApp `(00) 00000-0000`.
+  - Busca textual rápida combinada com refinamento instantâneo por nome e telefone.
+  - Tabela com ordenação (Nome A-Z, Nome Z-A, Mais recentes) e paginação (10 pacientes por página).
+  - Ficha individual de prontuário com código clínico padronizado (`PAC-XXXXX`) e cálculo automático de idade.
+  - Exclusão com confirmação em duas etapas e bloqueio de exclusão para pacientes que possuem consultas vinculadas.
+- **Atendimentos Clínicos e Refração:**
+  - Seletor rápido de pacientes por busca em tempo real para iniciar novos atendimentos.
+  - Ficha clínica completa: anamnese/queixa principal e vínculo opcional de ótica parceira (ou atendimento particular).
+  - Tabela refrativa detalhada para Olho Direito (OD) e Olho Esquerdo (OE): Esférico, Cilíndrico, Eixo, Acuidade Visual (Longe/Perto), DNP monocular e Adição.
+  - Medição de Distância Pupilar total (DP binocular) e flag de "Sem necessidade de nova correção".
+  - Conduta óptica com seleção múltipla de tipos de lentes e tratamentos via chips interativos.
+  - Cálculo inteligente automático da data sugerida para retorno (+1 ano a partir da consulta).
+  - Histórico clínico exibido em linha do tempo cronológica no prontuário, com comparação direta de exames anteriores.
+- **Emissão e Impressão de Prescrição Optométrica:**
+  - Modal de pré-visualização e conferência da receita médica formatada.
+  - Formatação visual automática de dioptrias (+/-, 2 decimais) e graus de eixo (`°`).
+  - Impressão isolada via iframe em layout A4 retrato sem interferência da aplicação e sem páginas em branco.
+- **Gestão de Óticas Parceiras:**
+  - Modal global acessível em qualquer tela pela barra de navegação superior (`Navbar`).
+  - Cadastro, edição, contador dinâmico de parceiras e busca em tempo real.
+  - Exclusão com dupla confirmação e proteção contra exclusão de óticas com histórico de atendimentos.
 
 ## Tecnologias
 
 - Backend: ASP.NET Core (.NET 10), Entity Framework Core, SQLite e Swagger.
 - Frontend: React 19, Vite 8, Lucide React (ícones) e React Router (dependência instalada).
 
+## Documentação do Projeto
+
+A documentação detalhada do sistema está centralizada na pasta [`docs/`](docs/):
+
+| Documento | Descrição |
+|---|---|
+| [docs/README.md](docs/README.md) | Índice geral e visão de entrega do MVP |
+| [docs/requisitos-v1.md](docs/requisitos-v1.md) | Especificação de requisitos (RF-01 a RF-19) e regras de negócio (RN-01 a RN-09) |
+| [docs/referencia-tecnica.md](docs/referencia-tecnica.md) | Arquitetura técnica, diagrama ER, catálogo de componentes e integração |
+| [docs/glossario-clinico.md](docs/glossario-clinico.md) | Glossário de termos optométricos (esférico, cilíndrico, eixo, DNP, etc.) |
+
 ## Estrutura do repositório
 
 ```text
 .
-├── Optometria.Api/          # API ASP.NET Core
+├── docs/                   # Documentação do projeto (requisitos, arquitetura, glossário)
+├── Optometria.Api/          # API ASP.NET Core (.NET 10)
 │   ├── Controllers/        # Endpoints de pacientes, óticas e atendimentos
 │   ├── DTOs/               # Dados de entrada e saída da API
 │   ├── Models/             # Entidades do sistema
@@ -23,9 +62,9 @@ Sistema web voltado para a rotina de atendimento optométrico. Permite cadastrar
 │   ├── Properties/         # Perfis de execução local
 │   ├── appsettings.json    # Configuração da conexão SQLite
 │   └── Program.cs          # Configuração e inicialização da API
-├── optometria-web/         # Frontend React
+├── optometria-web/         # Frontend React 19 + Vite 8
 │   ├── public/             # Arquivos estáticos
-│   └── src/                # Componentes, estilos e serviços de acesso à API
+│   └── src/                # Componentes (Navbar, Modais, Views), estilos e serviços
 ├── dotnet-tools.json       # Manifesto da ferramenta dotnet-ef
 └── README.md
 ```
