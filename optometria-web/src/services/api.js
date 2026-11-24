@@ -127,3 +127,12 @@ export const opticaService = {
     return handleResponse(res);
   },
 };
+
+// Serviços para o Dashboard
+export const dashboardService = {
+  // GET /api/dashboard
+  obterResumo: async () => {
+    const res = await fetch(`${API_URL}/dashboard`);
+    return handleResponse(res);
+  },
+};

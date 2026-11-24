@@ -1,0 +1,402 @@
+/* Container Principal */
+.inicio-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* ===================================================
+   1. CABEÇALHO DE BOAS-VINDAS E AÇÕES RÁPIDAS
+   =================================================== */
+.inicio-header-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 1.75rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.inicio-badge-dia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.inicio-titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.inicio-subtitulo {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 0.35rem;
+}
+
+.inicio-acoes-rapidas {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.btn-inicio-primario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.65rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.05s ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.btn-inicio-primario:hover {
+  background-color: #166534;
+}
+
+.btn-inicio-primario:active {
+  transform: scale(0.98);
+}
+
+.btn-inicio-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.65rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-inicio-secundario:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+/* ===================================================
+   2. CARTÕES DE MÉTRICAS (KPIS)
+   =================================================== */
+.inicio-kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.kpi-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+}
+
+.kpi-icone-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpi-icone-verde {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.kpi-icone-azul {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.kpi-icone-ambar {
+  background-color: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.kpi-icone-esmeralda {
+  background-color: #f0fdfa;
+  color: #0d9488;
+  border: 1px solid #99f6e4;
+}
+
+.kpi-conteudo {
+  display: flex;
+  flex-direction: column;
+}
+
+.kpi-rotulo {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.kpi-valor {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+  margin-top: 0.2rem;
+}
+
+/* ===================================================
+   3. DOIS PAINÉIS CENTRAIS (LADO A LADO)
+   =================================================== */
+.inicio-paineis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.painel-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.painel-header {
+  padding: 1.15rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.painel-titulo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.painel-icone-titulo {
+  color: #15803d;
+}
+
+.painel-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.painel-badge-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+}
+
+.painel-badge-count.retornos {
+  background-color: #f0fdf4;
+  color: #15803d;
+}
+
+.painel-conteudo {
+  padding: 0.75rem 1.5rem 1.25rem 1.5rem;
+  min-height: 280px;
+}
+
+.painel-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 3rem 0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.painel-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Listas de itens nos painéis */
+.lista-atendimentos-recentes,
+.lista-retornos-sugeridos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.item-atendimento-recente,
+.item-retorno-sugerido {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.item-atendimento-recente:hover,
+.item-retorno-sugerido:hover {
+  background-color: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.item-atendimento-info,
+.item-retorno-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.item-paciente-topo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.item-nome-paciente {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.item-tag-origem {
+  font-size: 0.72rem;
+  font-weight: 500;
+  background-color: #e2e8f0;
+  color: #334155;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.badge-status-retorno {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.badge-status-retorno.agendado {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge-status-retorno.pendente {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.item-atendimento-detalhe {
+  font-size: 0.78rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-telefone {
+  color: #475569;
+}
+
+.item-queixa-resumo {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.btn-item-prontuario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #15803d;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.btn-item-prontuario:hover {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+/* Responsividade básica */
+@media (max-width: 900px) {
+  .inicio-kpis-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .inicio-paineis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inicio-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inicio-acoes-rapidas {
+    width: 100%;
+  }
+
+  .btn-inicio-primario,
+  .btn-inicio-secundario {
+    flex: 1;
+    justify-content: center;
+  }
+}

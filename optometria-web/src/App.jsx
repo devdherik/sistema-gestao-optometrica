@@ -4,6 +4,7 @@ import ModalOpticas from './components/ModalOpticas';
 import ModalNovoPaciente from './components/ModalNovoPaciente';
 import ModalReceitaOptometrica from './components/ModalReceitaOptometrica';
 import { LayoutGrid, Users, ClipboardList } from 'lucide-react';
+import InicioView from './components/InicioView';
 import PacientesView from './components/PacientesView';
 import ProntuarioPacienteView from './components/ProntuarioPacienteView';
 import AtendimentosView from './components/AtendimentosView';
@@ -118,13 +119,17 @@ function App() {
 
       <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
         {abaAtiva === 'inicio' && (
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <LayoutGrid size={24} />
-              <h2>Painel de Início</h2>
-            </div>
-            <p>Visão geral e atalhos rápidos do consultório.</p>
-          </div>
+          <InicioView 
+            onNovoAtendimento={() => {
+              setPacienteEmAtendimento(null);
+              setAbaAtiva('atendimentos');
+            }}
+            onCadastrarPaciente={handleAbrirNovoPaciente}
+            onVerProntuarioPorId={(paciente) => {
+              setPacienteSelecionadoProntuario(paciente);
+              setAbaAtiva('pacientes');
+            }}
+          />
         )}
 
         {/* ABA: PACIENTES */}

@@ -7,7 +7,8 @@ import {
   ChevronDown, 
   LayoutGrid, 
   Users, 
-  ClipboardList 
+  ClipboardList,
+  CalendarDays
 } from 'lucide-react';
 
 function Navbar({ abaAtiva = 'inicio', onTrocarAba, onAbrirModalOpticas }) {
@@ -19,17 +20,17 @@ function Navbar({ abaAtiva = 'inicio', onTrocarAba, onAbrirModalOpticas }) {
     year: 'numeric'
   }).format(new Date());
 
-    // Deixa a primeira letra do dia da semana em maiúsculo (ex: "Quinta-feira...")
+  // Formata com a primeira letra maiúscula
   const dataFormatada = dataHoje.charAt(0).toUpperCase() + dataHoje.slice(1);
 
-    // Lista de abas da faixa inferior
+  // Lista de abas da faixa inferior
   const abas = [
     { id: 'inicio', label: 'Início', Icon: LayoutGrid },
     { id: 'pacientes', label: 'Pacientes', Icon: Users },
     { id: 'atendimentos', label: 'Atendimentos', Icon: ClipboardList }
   ];
 
-    return (
+  return (
     <header className="navbar-container">
       {/* 1. FAIXA SUPERIOR (AZUL ESCURO) */}
       <div className="navbar-top">
@@ -85,9 +86,10 @@ function Navbar({ abaAtiva = 'inicio', onTrocarAba, onAbrirModalOpticas }) {
             );
           })}
         </nav>
-        {/* Data Dinâmica */}
-        <div className="navbar-date">
-          {dataFormatada}
+        {/* Data Dinâmica com Badge Padronizado */}
+        <div className="navbar-date-badge">
+          <CalendarDays size={14} />
+          <span>{dataFormatada}</span>
         </div>
       </div>
     </header>
