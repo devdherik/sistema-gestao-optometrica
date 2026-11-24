@@ -2,8 +2,8 @@
 
 Documento principal de requisitos do sistema. Define o escopo do MVP, as regras de negócio, os requisitos funcionais e os dados gerenciados, substituindo anotações preliminares e levantamentos provisórios.
 
-> **Versão do Documento:** 1.2  
-> **Última Atualização:** 17/11/2026 (Especificação da interface de Pacientes, Prontuário, máscara de telefone, cálculo de idade automático e paginação)
+> **Versão do Documento:** 1.3  
+> **Última Atualização:** 24/11/2026 (Conclusão do MVP: fluxo de Atendimentos Clínicos, Linha do Tempo no Prontuário e Impressão de Receita Optométrica A4)
 
 ---
 
@@ -59,20 +59,25 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 * **RF-08:** Excluir registro de ótica parceira com confirmação em duas etapas na interface (ação "Desativar parceria"), sendo a exclusão bloqueada caso a parceira possua atendimentos associados (conforme **RN-08**).
 
 ### 3.3 Módulo Atendimentos e Prescrição
-* **RF-09:** Iniciar novo atendimento vinculado a um paciente existente.
-* **RF-10:** Selecionar opcionalmente a ótica de origem responsável pelo encaminhamento (ou manter como Particular).
-* **RF-11:** Registrar data do atendimento (sugerindo a data atual como padrão) e queixa principal/anamnese.
+> *Nota de Interface (UX):* O módulo contempla a jornada clínica completa do consultório em três etapas integradas:
+> 1. **Seleção de Paciente (`AtendimentosView`):** Painel de entrada com busca instantânea por nome ou telefone para selecionar o paciente ou cadastrar um novo via modal rápido.
+> 2. **Ficha Clínica de Atendimento (`FichaAtendimentoView`):** Formulário em duas colunas com anamnese, vínculo opcional de ótica parceira (ou particular), tabela refrativa completa (OD/OE com dioptrias, eixos, AV e DNP), medição de DP total, seleção múltipla de lentes e tratamentos via chips interativos, cálculo inteligente automático da data de retorno (+1 ano a partir da consulta) e redirecionamento direto para o prontuário ao salvar.
+> 3. **Linha do Tempo e Emissão de Receita (`ProntuarioPacienteView` & `ModalReceitaOptometrica`):** Exibição cronológica das consultas anteriores com comparação direta de graus e botão para gerar a receita médica formatada. A impressão é executada via iframe HTML isolado com `@page { size: A4 portrait; }`, garantindo impressão em folha única, sem cortes e sem elementos da interface.
+
+* **RF-09:** Iniciar novo atendimento vinculado a um paciente existente a partir da busca na aba Atendimentos ou pelo botão "Nova Consulta" no prontuário.
+* **RF-10:** Selecionar opcionalmente a ótica de origem responsável pelo encaminhamento (dropdown alimentado pela API de óticas parceiras) ou manter como Particular.
+* **RF-11:** Registrar data do atendimento (sugerindo a data atual como padrão) e queixa principal/anamnese clínica.
 * **RF-12:** Registrar refração por olho (OD e OE):
   * Grau esférico, cilíndrico e eixo;
   * Acuidade visual (AV longe e AV perto);
   * Distância naso-pupilar (DNP) monocular.
-* **RF-13:** Registrar medições gerais: Adição por olho e Distância Pupilar total (DP).
-* **RF-14:** Indicar tipos de lentes recomendadas (seleção múltipla: visão simples, multifocal, bifocal, alto índice, free form, etc.).
-* **RF-15:** Indicar tratamentos de lentes (seleção múltipla: antirreflexo, fotocromático, filtro azul, incolor).
-* **RF-16:** Indicar data sugerida para retorno do paciente.
+* **RF-13:** Registrar medições gerais: Adição por olho e Distância Pupilar total (DP binocular em mm).
+* **RF-14:** Indicar tipos de lentes recomendadas (seleção múltipla: Visão Simples, Multifocal, Bifocal, Alto Índice, Free Form, Ocupacional).
+* **RF-15:** Indicar tratamentos de lentes (seleção múltipla: Antirreflexo, Filtro Azul / Blue Cut, Fotocromático / Transitions, Incolor, Proteção UV).
+* **RF-16:** Indicar data sugerida para retorno do paciente (com sugestão automática para 1 ano após a consulta).
 * **RF-17:** Marcar flag de "Sem necessidade de nova correção visual".
-* **RF-18:** Consultar o histórico completo de atendimentos anteriores do paciente ordenados por data.
-* **RF-19:** Gerar e imprimir a prescrição optométrica formatada do atendimento.
+* **RF-18:** Consultar o histórico completo de atendimentos anteriores do paciente ordenados cronologicamente em formato de linha do tempo no prontuário.
+* **RF-19:** Gerar e imprimir a prescrição optométrica formatada do atendimento com formatação de dioptrias (+/-, decimais), recomendações e área para assinatura do profissional.
 
 ---
 
@@ -86,6 +91,7 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 | `DataNascimento` | Data de nascimento (usada para calcular a idade no atendimento) |
 | `Telefone` | Telefone de contato / WhatsApp |
 | `Observacoes` | Notas cadastrais gerais permanentes do paciente |
+| `UltimaConsulta` | Data/hora do atendimento mais recente (calculado pelo backend para o DTO de listagem/detalhe) |
 
 ### 4.2 Ótica
 | Campo | Descrição |
@@ -130,4 +136,5 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 | **1.0** | 06/11/2026 | Time de Desenvolvimento | Especificação inicial de requisitos e escopo do MVP. |
 | **1.1** | 13/11/2026 | Time de Desenvolvimento | Inclusão da regra **RN-08** (bloqueio de exclusão de óticas com histórico), detalhamento do fluxo em modal global de Óticas (RF-05 a RF-08) e dupla confirmação ("Desativar parceria"). |
 | **1.2** | 17/11/2026 | Time de Desenvolvimento | Detalhamento do módulo de Pacientes e Prontuário (`PacientesView`, `ModalNovoPaciente`, `ProntuarioPacienteView`), incluindo máscara de contato, cálculo de idade automático, código padronizado `PAC-XXXXX` e paginação/ordenação. |
+| **1.3** | 24/11/2026 | Time de Desenvolvimento | Conclusão do MVP: fluxo completo de Atendimentos Clínicos (`AtendimentosView` e `FichaAtendimentoView`), linha do tempo no prontuário, emissão e impressão de receita médica via iframe isolado A4 (`ModalReceitaOptometrica`) e inclusão de `UltimaConsulta` no `PacienteDto`. |
 

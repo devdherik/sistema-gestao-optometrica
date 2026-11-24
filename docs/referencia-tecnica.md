@@ -14,20 +14,33 @@ flowchart LR
         Navbar["Navbar (Navegação & Gatilhos)"]
         ModalOpticas["ModalOpticas (CRUD Global)"]
         ModalPaciente["ModalNovoPaciente (Criação/Edição)"]
+        ModalReceita["ModalReceitaOptometrica (Impressão A4)"]
         PacientesView["PacientesView (Lista, Filtro & Paginação)"]
-        ProntuarioView["ProntuarioPacienteView (Perfil & Histórico)"]
+        ProntuarioView["ProntuarioPacienteView (Perfil & Timeline)"]
+        AtendimentosView["AtendimentosView (Seletor de Paciente)"]
+        FichaAtendimento["FichaAtendimentoView (Exame Clínico)"]
         Service["api.js (Fetch API)"]
         
         Navbar --> ModalOpticas
         Navbar --> PacientesView
+        Navbar --> AtendimentosView
+        
         PacientesView --> ModalPaciente
         PacientesView --> ProntuarioView
         ProntuarioView --> ModalPaciente
+        ProntuarioView --> ModalReceita
+        ProntuarioView --> FichaAtendimento
+        
+        AtendimentosView --> FichaAtendimento
+        AtendimentosView --> ModalPaciente
+        FichaAtendimento --> ProntuarioView
         
         ModalOpticas --> Service
         PacientesView --> Service
         ModalPaciente --> Service
         ProntuarioView --> Service
+        AtendimentosView --> Service
+        FichaAtendimento --> Service
     end
 
     subgraph Backend ["Backend (Optometria.Api)"]
@@ -120,7 +133,7 @@ O backend está organizado em pastas por responsabilidade dentro do projeto `Opt
 * **`Models/`:** Representam as entidades de domínio e as tabelas do banco de dados (`Paciente`, `Atendimento`, `Optica`, `RefratometriaOlho`).
 * **`DTOs/` (Data Transfer Objects):** Objetos de transferência para entrada e saída da API. Evitam expor as entidades de banco diretamente na rede e protegem contra envio de campos indevidos:
   * Criação: `CriarPacienteDto`, `CriarAtendimentoDto`, `CriarOpticaDto`.
-  * Leitura: `PacienteDto`, `AtendimentoDto`, `OpticaDto`, `RefratometriaOlhoDto`.
+  * Leitura: `PacienteDto` (com data da `UltimaConsulta` calculada pelo backend), `AtendimentoDto`, `OpticaDto`, `RefratometriaOlhoDto`.
 * **`Controllers/`:** Controladores que expõem as rotas REST (`PacientesController`, `AtendimentosController`, `OpticasController`). Responsáveis por validar os dados recebidos, orquestrar a consulta ou salvamento e retornar o código HTTP adequado (ex.: `200 OK`, `201 Created`, `400 BadRequest`, `404 NotFound`, `204 NoContent`).
   * *Validação de Integridade:* Tanto em `OpticasController.Excluir(id)` quanto em `PacientesController.Excluir(id)`, o sistema verifica preventivamente se existem atendimentos vinculados antes de remover a entidade (`AnyAsync`); havendo registros associados, a exclusão é rejeitada com status `400 BadRequest` e mensagem amigável, garantindo a integridade dos dados históricos.
 * **`Data/`:** Contém o `OptometriaDbContext`, que herda do Entity Framework Core e mapeia os `DbSet<>` das entidades, configurando relacionamentos e restrições.
@@ -153,10 +166,28 @@ A aplicação React em `optometria-web/` adota componentes modulares com estiliz
 * **[`src/components/ProntuarioPacienteView.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/ProntuarioPacienteView.jsx):**
   * Visão individual do prontuário com layout em duas colunas:
     * *Coluna esquerda (Ficha Cadastral):* Avatar com iniciais, código formatado de identificação clínica (`PAC-XXXXX`), dados de contato, data de nascimento com **cálculo automático de idade em anos**, observações permanentes e botões para "Editar cadastro" (reabre o modal preenchido) e "Excluir paciente" (com caixa de dupla confirmação antes do disparo para o backend).
-    * *Coluna direita (Histórico Clínico):* Painel que consome `atendimentoService.obterHistoricoPorPaciente(id)`, exibindo o contador e a lista cronológica das consultas realizadas.
-  * Botão de retorno rápido para a lista e atalho "Nova Consulta" que direciona para a aba de Atendimentos.
+    * *Coluna direita (Linha do Tempo Clínica):* Painel que consome `atendimentoService.obterHistoricoPorPaciente(id)` e renderiza uma linha do tempo cronológica com todas as consultas. Cada item da timeline apresenta os dados de refração comparativos (OD/OE: Esférico, Cilíndrico, Eixo, AV, Adição e DNP), indicação de ótica de origem, queixa principal, recomendações de lentes/tratamentos, data sugerida de retorno e botão "Imprimir receita" que abre a pré-visualização.
+  * Botão de retorno rápido para a lista e atalho "Nova Consulta" que direciona para a ficha clínica.
+* **[`src/components/AtendimentosView.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/AtendimentosView.jsx):**
+  * Ponto de entrada da aba de Atendimentos quando nenhum paciente está em consulta ativa.
+  * Seletor interativo com barra de busca inteligente (filtra por nome ou dígitos de telefone instantaneamente) para abrir a ficha clínica de um paciente cadastrado ou acionar o modal para registrar um novo paciente.
+* **[`src/components/FichaAtendimentoView.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/FichaAtendimentoView.jsx):**
+  * Formulário clínico para registro de consultas optométricas organizado em duas colunas:
+    * *Coluna da esquerda:* Dados de identificação do paciente, data do exame (sugerindo a data atual como padrão) e seleção da ótica parceira de origem (dropdown alimentado pela API de óticas ou opção "Particular").
+    * *Coluna da direita:*
+      * Queixa principal e anamnese.
+      * Tabela refrativa completa com inputs numéricos para Esférico, Cilíndrico, Eixo, AV Longe, AV Perto, Adição e DNP monocular para Olho Direito (OD) e Olho Esquerdo (OE).
+      * Medição de Distância Pupilar total (DP) e checkbox de "Sem necessidade de nova correção".
+      * Conduta óptica com seleção múltipla por chips (*badges*) para tipos de lentes (Visão Simples, Multifocal, etc.) e tratamentos (Antirreflexo, Blue Cut, etc.).
+      * Data sugerida de retorno com **cálculo automático para 1 ano à frente** a partir da data de atendimento selecionada.
+      * Campo livre para observações e conduta clínica.
+  * Ao salvar com sucesso, redireciona automaticamente o usuário para a tela de prontuário do paciente exibindo feedback visual de confirmação.
+* **[`src/components/ModalReceitaOptometrica.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/ModalReceitaOptometrica.jsx):**
+  * Modal de pré-visualização e impressão da prescrição médica optométrica.
+  * Formata visualmente os graus refrativos com sinal (+/-) e duas casas decimais, graus de eixo (`°`), lentes, tratamentos, validade/retorno e dados do profissional.
+  * **Mecanismo de Impressão via Iframe Isolado:** Em vez de imprimir a janela principal (o que poluiria a impressão com menus, botões e barras de rolagem), o componente cria um `<iframe>` temporário injetando exclusivamente a folha de receita com estilos `@page { size: A4 portrait; margin: 1.2cm 1.5cm; }`. Isso garante uma impressão limpa, profissional e em página única física sem folhas em branco.
 * **Orquestração no [`src/App.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/App.jsx):**
-  * Controla o estado da aba ativa (`inicio`, `pacientes`, `atendimentos`), a exibição dos modais globais e a alternância condicional na aba de pacientes entre `PacientesView` (listagem) e `ProntuarioPacienteView` (ficha individual).
+  * Máquina de estados centralizada que gerencia a aba ativa (`inicio`, `pacientes`, `atendimentos`), modais globais (`ModalOpticas`, `ModalNovoPaciente`, `ModalReceitaOptometrica`), e a navegação contextual (ex: de Atendimentos para Prontuário pós-salvamento, ou de Prontuário para Nova Consulta com o paciente pré-selecionado).
 
 ---
 
