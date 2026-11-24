@@ -75,13 +75,20 @@ public class PacientesController : ControllerBase
         }
 
         // se encontrou, monta o DTO de resposta
+        var ultimaConsulta = await _contexto.Atendimentos
+            .Where(a => a.PacienteId == id)
+            .OrderByDescending(a => a.DataAtendimento)
+            .Select(a => a.DataAtendimento)
+            .FirstOrDefaultAsync();
+
         var dto = new PacienteDto
         {
             Id = paciente.Id,
             NomeCompleto = paciente.NomeCompleto ?? string.Empty,
             DataNascimento = paciente.DataNascimento,
             Telefone = paciente.Telefone,
-            Observacoes = paciente.Observacoes
+            Observacoes = paciente.Observacoes,
+            UltimaConsulta = ultimaConsulta
         };
 
         // retorna 200 OK com os dados do paciente
@@ -102,7 +109,7 @@ public class PacientesController : ControllerBase
             query = query.Where(p => p.NomeCompleto != null && p.NomeCompleto.ToLower().Contains(nome.ToLower()));
         }
 
-        //executa a busca no banco SQLite e já transforam/projeta em PacienteDto
+        //executa a busca no banco SQLite e já transforma/projeta em PacienteDto incluindo a última consulta
         var pacientes = await query
             .Select(p => new PacienteDto
             {
@@ -110,7 +117,11 @@ public class PacientesController : ControllerBase
                 NomeCompleto = p.NomeCompleto ?? string.Empty,
                 DataNascimento = p.DataNascimento,
                 Telefone = p.Telefone,
-                Observacoes = p.Observacoes
+                Observacoes = p.Observacoes,
+                UltimaConsulta = p.Atendimentos
+                    .OrderByDescending(a => a.DataAtendimento)
+                    .Select(a => a.DataAtendimento)
+                    .FirstOrDefault()
             })
             .ToListAsync();
 

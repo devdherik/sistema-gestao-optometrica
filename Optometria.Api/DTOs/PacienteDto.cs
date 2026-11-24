@@ -7,4 +7,5 @@ public class PacienteDto
     public DateOnly? DataNascimento {get; set; }
     public string? Telefone {get; set; }
     public string? Observacoes {get; set; }
+    public DateTime? UltimaConsulta {get; set; }
 }
