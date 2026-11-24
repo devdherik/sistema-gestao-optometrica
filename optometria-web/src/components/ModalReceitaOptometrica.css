@@ -371,23 +371,32 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 1cm;
+    margin: 0;
+  }
+
+  /* Oculta tudo que está fora do modal */
+  body > *:not(.receita-modal-overlay) {
+    display: none !important;
   }
 
   html, body {
     margin: 0 !important;
     padding: 0 !important;
-    height: auto !important;
-    overflow: visible !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
     background: #ffffff !important;
   }
 
-  /* Oculta tudo que não faz parte do modal de receita */
-  body > * {
+  /* Oculta botões e elementos de tela */
+  .noprint,
+  .receita-modal-header-acoes,
+  .btn-receita-imprimir,
+  .btn-receita-fechar {
     display: none !important;
   }
 
-  /* Exibe somente o overlay e o container */
+  /* Remove o fundo escuro e o container do modal */
   .receita-modal-overlay {
     position: static !important;
     display: block !important;
@@ -396,9 +405,9 @@
     padding: 0 !important;
     margin: 0 !important;
     inset: auto !important;
-    overflow: visible !important;
     height: auto !important;
     width: 100% !important;
+    overflow: visible !important;
   }
 
   .receita-modal-container {
@@ -412,21 +421,16 @@
     overflow: visible !important;
   }
 
-  /* Oculta botões e barras de controle */
-  .noprint,
-  .receita-modal-header-acoes {
-    display: none !important;
-  }
-
-  /* Configuração da folha para encaixe perfeito em 1 única página */
+  /* Configuração da folha para caber perfeitamente em 1 única página */
   .receita-folha-papel {
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 1.5cm 1.8cm !important;
     border: none !important;
     box-shadow: none !important;
     width: 100% !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
 
   /* Força a impressão exata de cores de fundo de badges e linhas no Chrome/Edge/Firefox */
@@ -454,6 +458,6 @@
 
   .receita-rodape-assinatura {
     page-break-inside: avoid;
-    margin-top: 2.5rem;
+    margin-top: 2rem;
   }
 }
