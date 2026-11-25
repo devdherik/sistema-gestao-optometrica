@@ -35,12 +35,20 @@ function App() {
     setModalPacienteAberto(true);
   };
 
-  const handlePacienteSalvo = () => {
+  const handlePacienteSalvo = (pacienteAtualizado) => {
     // Recarrega lista de pacientes
     setRecarregarPacientesGatilho((antigo) => antigo + 1);
-    // Se estava visualizando o prontuário daquele paciente, atualiza seus dados
-    if (pacienteEmEdicao && pacienteSelecionadoProntuario && pacienteEmEdicao.id === pacienteSelecionadoProntuario.id) {
-      setPacienteSelecionadoProntuario(pacienteEmEdicao);
+
+    // Se o prontuário aberto pertence ao paciente salvo, atualiza seus dados
+    if (
+      pacienteAtualizado &&
+      pacienteSelecionadoProntuario &&
+      pacienteAtualizado.id === pacienteSelecionadoProntuario.id
+    ) {
+      setPacienteSelecionadoProntuario((pacienteAtual) => ({
+        ...pacienteAtual,
+        ...pacienteAtualizado,
+      }));
     }
   };
 

@@ -80,17 +80,31 @@ function ModalNovoPaciente({ aberto, onFechar, onPacienteSalvo, pacienteParaEdit
     };
 
     try {
+      let pacienteSalvo;
+
       if (pacienteParaEditar && pacienteParaEditar.id) {
-        await pacienteService.atualizar(pacienteParaEditar.id, dadosPaciente);
-        setAviso({ tipo: 'sucesso', texto: 'Paciente atualizado com sucesso!' });
+        pacienteSalvo = await pacienteService.atualizar(
+          pacienteParaEditar.id,
+          dadosPaciente
+        );
+
+        setAviso({
+          tipo: 'sucesso',
+          texto: 'Paciente atualizado com sucesso!',
+        });
       } else {
-        await pacienteService.criar(dadosPaciente);
-        setAviso({ tipo: 'sucesso', texto: 'Paciente cadastrado com sucesso!' });
+        pacienteSalvo = await pacienteService.criar(dadosPaciente);
+
+        setAviso({
+          tipo: 'sucesso',
+          texto: 'Paciente cadastrado com sucesso!',
+        });
+            
       }
 
-      // Notifica o componente pai para recarregar a lista
+      // Envia ao componente pai o paciente retornado pela API
       if (onPacienteSalvo) {
-        onPacienteSalvo();
+        onPacienteSalvo(pacienteSalvo);
       }
 
       setTimeout(() => {
