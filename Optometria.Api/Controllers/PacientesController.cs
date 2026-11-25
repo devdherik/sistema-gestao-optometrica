@@ -103,10 +103,29 @@ public class PacientesController : ControllerBase
         var query = _contexto.Pacientes.AsQueryable();
 
         // se a pessoa digitou algo na busca de nome:
-        if (!string.IsNullOrWhiteSpace(nome))
-        {
-            // aqui eu filtro os pacientes onde o NomeCompleto contenha o texto buscado (ignora se é maiuscula ou minuscula)
-            query = query.Where(p => p.NomeCompleto != null && p.NomeCompleto.ToLower().Contains(nome.ToLower()));
+        if (!string.IsNullOrWhiteSpace(nome)){
+            var termoBusca = nome.Trim().ToLower();
+            var termoNumerico = new string(nome.Where(char.IsDigit).ToArray());
+
+            query = query.Where(p =>
+                (p.NomeCompleto != null &&
+                p.NomeCompleto.ToLower().Contains(termoBusca))
+                ||
+                (p.Telefone != null &&
+                (
+                    p.Telefone.ToLower().Contains(termoBusca)
+                    ||
+                    (
+                        termoNumerico != "" &&
+                        p.Telefone
+                            .Replace("(", "")
+                            .Replace(")", "")
+                            .Replace(" ", "")
+                            .Replace("-", "")
+                            .Contains(termoNumerico)
+                    )
+                ))
+            );
         }
 
         //executa a busca no banco SQLite e já transforma/projeta em PacienteDto incluindo a última consulta
