@@ -12,6 +12,7 @@ O sistema adota uma arquitetura em duas camadas desacopladas (Frontend SPA e Bac
 flowchart LR
     subgraph Frontend ["Frontend (optometria-web)"]
         Navbar["Navbar (Navegação & Gatilhos)"]
+        InicioView["InicioView (Dashboard & Métricas)"]
         ModalOpticas["ModalOpticas (CRUD Global)"]
         ModalPaciente["ModalNovoPaciente (Criação/Edição)"]
         ModalReceita["ModalReceitaOptometrica (Impressão A4)"]
@@ -21,9 +22,15 @@ flowchart LR
         FichaAtendimento["FichaAtendimentoView (Exame Clínico)"]
         Service["api.js (Fetch API)"]
         
+        Navbar --> InicioView
         Navbar --> ModalOpticas
         Navbar --> PacientesView
         Navbar --> AtendimentosView
+        
+        InicioView --> ProntuarioView
+        InicioView --> FichaAtendimento
+        InicioView --> ModalPaciente
+        InicioView --> Service
         
         PacientesView --> ModalPaciente
         PacientesView --> ProntuarioView
@@ -44,7 +51,7 @@ flowchart LR
     end
 
     subgraph Backend ["Backend (Optometria.Api)"]
-        Controller["Controllers (Endpoints REST)"]
+        Controller["Controllers (REST / Dashboard)"]
         DTO["DTOs (Entrada / Saída)"]
         EF["Entity Framework Core 10"]
         Controller --> DTO
@@ -133,8 +140,12 @@ O backend está organizado em pastas por responsabilidade dentro do projeto `Opt
 * **`Models/`:** Representam as entidades de domínio e as tabelas do banco de dados (`Paciente`, `Atendimento`, `Optica`, `RefratometriaOlho`).
 * **`DTOs/` (Data Transfer Objects):** Objetos de transferência para entrada e saída da API. Evitam expor as entidades de banco diretamente na rede e protegem contra envio de campos indevidos:
   * Criação: `CriarPacienteDto`, `CriarAtendimentoDto`, `CriarOpticaDto`.
-  * Leitura: `PacienteDto` (com data da `UltimaConsulta` calculada pelo backend), `AtendimentoDto`, `OpticaDto`, `RefratometriaOlhoDto`.
-* **`Controllers/`:** Controladores que expõem as rotas REST (`PacientesController`, `AtendimentosController`, `OpticasController`). Responsáveis por validar os dados recebidos, orquestrar a consulta ou salvamento e retornar o código HTTP adequado (ex.: `200 OK`, `201 Created`, `400 BadRequest`, `404 NotFound`, `204 NoContent`).
+  * Leitura: `PacienteDto` (com data da `UltimaConsulta` calculada pelo backend), `AtendimentoDto`, `OpticaDto`, `RefratometriaOlhoDto`, `DashboardDto`.
+* **`Controllers/`:** Controladores que expõem as rotas REST:
+  * `PacientesController`: Gerenciamento e listagem de pacientes com busca por nome/telefone e cálculo de última consulta.
+  * `OpticasController`: CRUD de óticas parceiras com filtro por nome.
+  * `AtendimentosController`: Registro de consultas clínicas e consulta de histórico por paciente.
+  * `DashboardController` (`GET /api/dashboard`): Agrega contadores consolidados (total de pacientes, total de óticas, consultas do mês e consultas do dia) e os 5 atendimentos mais recentes. *(Nota: a exibição de lista de próximos retornos clínicos sugeridos foi descontinuada do dashboard para manter o painel inicial objetivo e focado em métricas operacionais e atendimentos recentes).*
   * *Validação de Integridade:* Tanto em `OpticasController.Excluir(id)` quanto em `PacientesController.Excluir(id)`, o sistema verifica preventivamente se existem atendimentos vinculados antes de remover a entidade (`AnyAsync`); havendo registros associados, a exclusão é rejeitada com status `400 BadRequest` e mensagem amigável, garantindo a integridade dos dados históricos.
 * **`Data/`:** Contém o `OptometriaDbContext`, que herda do Entity Framework Core e mapeia os `DbSet<>` das entidades, configurando relacionamentos e restrições.
 * **`Migrations/`:** Histórico de versionamento do esquema do banco de dados gerado pela ferramenta `dotnet-ef`.
@@ -149,6 +160,11 @@ A aplicação React em `optometria-web/` adota componentes modulares com estiliz
   * Barra de navegação superior fixa com duas faixas.
   * Faixa superior: identidade visual (*OptoSystem*), atalho direto para acionar o modal global de óticas parceiras e identificação do profissional (avatar e nome).
   * Faixa inferior: abas de navegação principal (*Início*, *Pacientes*, *Atendimentos*) e exibição dinâmica da data atual formatada por extenso no padrão brasileiro (`Intl.DateTimeFormat`).
+* **[`src/components/InicioView.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/InicioView.jsx):**
+  * Painel inicial (Dashboard) consumindo `dashboardService.obterResumo()`.
+  * **Métricas em tempo real:** 4 cartões com indicadores de total de pacientes, atendimentos no mês, atendimentos no dia e total de óticas parceiras.
+  * **Atalhos rápidos:** Botões de ação para abrir diretamente o fluxo de nova consulta e cadastro de novo paciente.
+  * **Painel de Atendimentos Recentes:** Exibição dos últimos atendimentos realizados com dados do paciente, ótica de origem e atalho "Ver" para navegação direta ao prontuário. *(O painel de próximos retornos clínicos sugeridos foi descontinuado)*.
 * **[`src/components/ModalOpticas.jsx`](file:///c:/Users/71588959473/Documents/GitHub/sistema-gestao-optometrica/optometria-web/src/components/ModalOpticas.jsx):**
   * Modal global exibido em sobreposição (*overlay*), permitindo acesso ao CRUD completo de óticas a qualquer momento sem trocar de rota ou perder dados preenchidos em atendimentos.
   * **Layout em duas colunas:**

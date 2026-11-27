@@ -2,9 +2,9 @@
 
 Documento principal de requisitos do sistema. Define o escopo do MVP, as regras de negócio, os requisitos funcionais e os dados gerenciados, substituindo anotações preliminares e levantamentos provisórios.
 
-> **Versão do Documento:** 1.3  
+> **Versão do Documento:** 1.4  
 > **Status do Escopo:**  100% Implementado (MVP Finalizado — 19/19 Requisitos Atendidos)  
-> **Última Atualização:** 24/11/2026 (Conclusão do MVP: fluxo de Atendimentos Clínicos, Linha do Tempo no Prontuário e Impressão de Receita Optométrica A4)
+> **Última Atualização:** 27/11/2026 (Remoção da lista de retornos sugeridos do dashboard e consolidação do painel de início)
 
 ---
 
@@ -65,6 +65,8 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 > 1. **Seleção de Paciente (`AtendimentosView`):** Painel de entrada com busca instantânea por nome ou telefone para selecionar o paciente ou cadastrar um novo via modal rápido.
 > 2. **Ficha Clínica de Atendimento (`FichaAtendimentoView`):** Formulário em duas colunas com anamnese, vínculo opcional de ótica parceira (ou particular), tabela refrativa completa (OD/OE com dioptrias, eixos, AV e DNP), medição de DP total, seleção múltipla de lentes e tratamentos via chips interativos, cálculo inteligente automático da data de retorno (+1 ano a partir da consulta) e redirecionamento direto para o prontuário ao salvar.
 > 3. **Linha do Tempo e Emissão de Receita (`ProntuarioPacienteView` & `ModalReceitaOptometrica`):** Exibição cronológica das consultas anteriores com comparação direta de graus e botão para gerar a receita médica formatada. A impressão é executada via iframe HTML isolado com `@page { size: A4 portrait; }`, garantindo impressão em folha única, sem cortes e sem elementos da interface.
+>
+> *Nota sobre Painel Inicial e Retornos:* O painel da tela inicial (`InicioView`) foca exclusivamente em métricas consolidadas (pacientes, óticas, atendimentos do mês/dia) e na lista de atendimentos recentes. A exibição de uma lista de "próximos retornos sugeridos" no dashboard foi descontinuada para evitar poluição visual e manter o fluxo de acompanhamento centralizado na linha do tempo individual do prontuário de cada paciente.
 
 * **RF-09:** Iniciar novo atendimento vinculado a um paciente existente a partir da busca na aba Atendimentos ou pelo botão "Nova Consulta" no prontuário.
 * **RF-10:** Selecionar opcionalmente a ótica de origem responsável pelo encaminhamento (dropdown alimentado pela API de óticas parceiras) ou manter como Particular.
@@ -139,4 +141,5 @@ Para manter o foco na rotina essencial do consultório, os seguintes módulos n�
 | **1.1** | 13/11/2026 | Time de Desenvolvimento | Inclusão da regra **RN-08** (bloqueio de exclusão de óticas com histórico), detalhamento do fluxo em modal global de Óticas (RF-05 a RF-08) e dupla confirmação ("Desativar parceria"). |
 | **1.2** | 17/11/2026 | Time de Desenvolvimento | Detalhamento do módulo de Pacientes e Prontuário (`PacientesView`, `ModalNovoPaciente`, `ProntuarioPacienteView`), incluindo máscara de contato, cálculo de idade automático, código padronizado `PAC-XXXXX` e paginação/ordenação. |
 | **1.3** | 24/11/2026 | Time de Desenvolvimento | Conclusão do MVP: fluxo completo de Atendimentos Clínicos (`AtendimentosView` e `FichaAtendimentoView`), linha do tempo no prontuário, emissão e impressão de receita médica via iframe isolado A4 (`ModalReceitaOptometrica`), inclusão de `UltimaConsulta` no `PacienteDto` e formalização da regra **RN-09** (bloqueio de exclusão de pacientes com histórico). |
+| **1.4** | 27/11/2026 | Time de Desenvolvimento | Documentação da tela inicial com indicadores consolidados e atendimentos recentes (`InicioView`), e registro da descontinuação do painel de "próximos retornos sugeridos" no dashboard. |
 

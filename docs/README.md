@@ -8,6 +8,7 @@ Guia e índice geral dos documentos de especificação, regras de negócio e arq
 
 ## Módulos Entregues no MVP
 
+- [x] **Painel Inicial (Dashboard):** Indicadores consolidados em tempo real, atalhos rápidos e listagem dos atendimentos mais recentes.
 - [x] **Módulo de Óticas Parceiras:** Cadastro, edição, busca e exclusão protegida via modal global acessível pela Navbar.
 - [x] **Módulo de Pacientes e Prontuário:** Tabela com busca combinada (nome/telefone), ordenação, paginação, cadastro modal com máscara e prontuário com código `PAC-XXXXX` e cálculo de idade.
 - [x] **Módulo de Atendimentos Clínicos:** Ficha clínica completa com refração OD/OE, conduta óptica (lentes e tratamentos), retorno automático para +1 ano e histórico em linha do tempo.

@@ -9,6 +9,10 @@ Sistema web completo voltado para a rotina clínica do profissional de optometri
 
 ## Funcionalidades do MVP
 
+- **Painel Inicial (Dashboard):**
+  - Indicadores operacionais consolidados em tempo real: total de pacientes, consultas no mês, consultas hoje e total de óticas.
+  - Ações rápidas para iniciar novo atendimento ou cadastrar novo paciente.
+  - Painel com os atendimentos mais recentes realizados e atalho para o prontuário.
 - **Gestão de Pacientes e Prontuário:**
   - Cadastro e edição com máscara automática para telefone/WhatsApp `(00) 00000-0000`.
   - Busca textual rápida combinada com refinamento instantâneo por nome e telefone.
