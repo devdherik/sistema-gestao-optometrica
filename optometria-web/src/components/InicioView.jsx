@@ -8,11 +8,9 @@ import {
   UserPlus, 
   Clock, 
   ArrowRight, 
-  CalendarCheck, 
   CheckCircle2, 
   Loader2, 
-  Eye, 
-  Phone
+  Eye
 } from 'lucide-react';
 import { dashboardService, pacienteService } from '../services/api';
 import './InicioView.css';
@@ -216,69 +214,6 @@ function InicioView({
                       title="Ver prontuário"
                     >
                       <span>Prontuário</span>
-                      <ArrowRight size={14} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Painel Direito: Próximos Retornos Sugeridos (Opção A) */}
-        <section className="painel-card">
-          <div className="painel-header">
-            <div className="painel-titulo-wrapper">
-              <CalendarCheck size={18} className="painel-icone-titulo" />
-              <h2>Próximos retornos sugeridos</h2>
-            </div>
-            <span className="painel-badge-count retornos">
-              Previsão anual
-            </span>
-          </div>
-
-          <div className="painel-conteudo">
-            {carregando ? (
-              <div className="painel-feedback">
-                <Loader2 size={24} className="spinner" />
-                <span>Carregando retornos...</span>
-              </div>
-            ) : !dados?.proximosRetornos || dados.proximosRetornos.length === 0 ? (
-              <div className="painel-vazio">
-                <p>Nenhum retorno clínico previsto registrado.</p>
-              </div>
-            ) : (
-              <div className="lista-retornos-sugeridos">
-                {dados.proximosRetornos.map((retorno, idx) => (
-                  <div key={`${retorno.pacienteId}-${idx}`} className="item-retorno-sugerido">
-                    <div className="item-retorno-info">
-                      <div className="item-paciente-topo">
-                        <strong className="item-nome-paciente">
-                          {retorno.nomePaciente}
-                        </strong>
-                        <span className={`badge-status-retorno ${retorno.statusRetorno === 'Retorno pendente' ? 'pendente' : 'agendado'}`}>
-                          {retorno.statusRetorno}
-                        </span>
-                      </div>
-
-                      <div className="item-atendimento-detalhe">
-                        <span>Retorno sugerido: <strong>{formatarData(retorno.dataSugeridaRetorno)}</strong></span>
-                        {retorno.telefone && (
-                          <span className="item-telefone">
-                            • <Phone size={11} style={{ display: 'inline', marginRight: '3px' }} />
-                            {retorno.telefone}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <button 
-                      type="button" 
-                      className="btn-item-prontuario"
-                      onClick={() => handleAbrirProntuario(retorno.pacienteId)}
-                      title="Abrir prontuário do paciente"
-                    >
-                      <span>Ver</span>
                       <ArrowRight size={14} />
                     </button>
                   </div>

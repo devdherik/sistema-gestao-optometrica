@@ -21,7 +21,6 @@ public class DashboardController : ControllerBase
     {
         var hoje = DateTime.Today;
         var inicioMes = new DateTime(hoje.Year, hoje.Month, 1);
-        var hojeDateOnly = DateOnly.FromDateTime(hoje);
 
         // 1. Contadores
         var totalPacientes = await _contexto.Pacientes.CountAsync();
@@ -79,52 +78,6 @@ public class DashboardController : ControllerBase
             })
             .ToListAsync();
 
-        // 3. Próximos retornos clínicos sugeridos (Opção A)
-        // Busca atendimentos com data de retorno definida, ordenados pela proximidade da data de retorno
-        var retornosRaw = await _contexto.Atendimentos
-            .Include(a => a.Paciente)
-            .Where(a => a.DataSugeridaRetorno.HasValue)
-            .OrderBy(a => a.DataSugeridaRetorno)
-            .Take(6)
-            .Select(a => new
-            {
-                PacienteId = a.PacienteId,
-                NomePaciente = a.Paciente != null ? a.Paciente.NomeCompleto : "Sem nome",
-                Telefone = a.Paciente != null ? a.Paciente.Telefone : null,
-                DataSugeridaRetorno = a.DataSugeridaRetorno,
-                UltimaConsulta = a.DataAtendimento
-            })
-            .ToListAsync();
-
-        var proximosRetornos = retornosRaw.Select(r =>
-        {
-            string status = "Em dia";
-            if (r.DataSugeridaRetorno.HasValue)
-            {
-                if (r.DataSugeridaRetorno.Value < hojeDateOnly)
-                {
-                    status = "Retorno pendente";
-                }
-                else if (r.DataSugeridaRetorno.Value.Month == hojeDateOnly.Month && r.DataSugeridaRetorno.Value.Year == hojeDateOnly.Year)
-                {
-                    status = "Este mês";
-                }
-                else
-                {
-                    status = "Agendado";
-                }
-            }
-
-            return new RetornoSugeridoDto
-            {
-                PacienteId = r.PacienteId,
-                NomePaciente = r.NomePaciente,
-                Telefone = r.Telefone,
-                DataSugeridaRetorno = r.DataSugeridaRetorno,
-                UltimaConsulta = r.UltimaConsulta,
-                StatusRetorno = status
-            };
-        }).ToList();
 
         var dashboard = new DashboardDto
         {
@@ -133,7 +86,6 @@ public class DashboardController : ControllerBase
             ConsultasMes = consultasMes,
             ConsultasHoje = consultasHoje,
             UltimosAtendimentos = ultimosAtendimentos,
-            ProximosRetornos = proximosRetornos
         };
 
         return Ok(dashboard);

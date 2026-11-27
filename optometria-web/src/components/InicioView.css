@@ -178,7 +178,7 @@
    =================================================== */
 .inicio-paineis-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1.25rem;
 }
 
@@ -226,11 +226,6 @@
   border-radius: 9999px;
 }
 
-.painel-badge-count.retornos {
-  background-color: #f0fdf4;
-  color: #15803d;
-}
-
 .painel-conteudo {
   padding: 0.75rem 1.5rem 1.25rem 1.5rem;
   min-height: 280px;
@@ -257,15 +252,13 @@
 }
 
 /* Listas de itens nos painéis */
-.lista-atendimentos-recentes,
-.lista-retornos-sugeridos {
+.lista-atendimentos-recentes{
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
 }
 
-.item-atendimento-recente,
-.item-retorno-sugerido {
+.item-atendimento-recente{
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -276,14 +269,12 @@
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.item-atendimento-recente:hover,
-.item-retorno-sugerido:hover {
+.item-atendimento-recente:hover{
   background-color: #f1f5f9;
   border-color: #e2e8f0;
 }
 
-.item-atendimento-info,
-.item-retorno-info {
+.item-atendimento-info{
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -313,23 +304,6 @@
   color: #334155;
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
-}
-
-.badge-status-retorno {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
-}
-
-.badge-status-retorno.agendado {
-  background-color: #e0f2fe;
-  color: #0369a1;
-}
-
-.badge-status-retorno.pendente {
-  background-color: #fee2e2;
-  color: #b91c1c;
 }
 
 .item-atendimento-detalhe {
